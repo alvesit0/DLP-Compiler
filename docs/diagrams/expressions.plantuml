@@ -32,6 +32,10 @@ class ArithmeticOperation {
     rightExpression: Expression
 }
 
+class Invocation {
+    arguments : List<Expression
+}
+
 ASTNode <|-- Expression
 Expression <|.. IntLiteral
 Expression <|.. DoubleLiteral
