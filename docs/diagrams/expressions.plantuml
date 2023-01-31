@@ -8,13 +8,35 @@ interface ASTNode {
     getColumn(): int
 }
 
-interface Expression
+interface Expression {
+    type: Type
+    definition: Definition
+}
 
 class IntLiteral {
     value: int
 }
 
+class DoubleLiteral {
+    value: double
+}
+
+class Variable {
+    name: String
+    definition: Definition
+}
+
+class ArithmeticOperation {
+    op: String
+    leftExpression: Expression
+    rightExpression: Expression
+}
+
 ASTNode <|-- Expression
 Expression <|.. IntLiteral
+Expression <|.. DoubleLiteral
+Expression <|.. Variable
+Expression <|.. ArithmeticOperation
+ArithmeticOperation o--"2" Expression
 
 @enduml
