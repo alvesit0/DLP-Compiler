@@ -1,9 +1,8 @@
 @startuml Expressions
 skinparam style strictuml
-skinparam monochrome true
+skinparam monochrome false
 
-
-interface ASTNode {
+interface ASTNode #b1e8f0 {
     getLine(): int
     getColumn(): int
 }
@@ -21,6 +20,10 @@ class DoubleLiteral {
     value: double
 }
 
+class CharLiteral {
+    value: char
+}
+
 class Variable {
     name: String
     definition: Definition
@@ -32,15 +35,36 @@ class ArithmeticOperation {
     rightExpression: Expression
 }
 
+class Cast {
+    leftExpression: Expression
+    rightExpression: Type
+}
+
 class Invocation {
-    arguments : List<Expression
+    arguments : List<Expression>
+}
+
+class SingleLineComment {
+    body: String
+}
+
+class MultiLineComment {
+    body: List<String>
 }
 
 ASTNode <|-- Expression
 Expression <|.. IntLiteral
 Expression <|.. DoubleLiteral
+Expression <|.. CharLiteral
 Expression <|.. Variable
 Expression <|.. ArithmeticOperation
+Expression <|.. Cast
+Expression <|.. Invocation
+Expression <|.. SingleLineComment
+Expression <|.. MultiLineComment
+
 ArithmeticOperation o--"2" Expression
+Cast o--"1" Expression
+Invocation o--"1" Expression
 
 @enduml

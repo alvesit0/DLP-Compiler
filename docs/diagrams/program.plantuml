@@ -1,9 +1,9 @@
 @startuml Program
 skinparam style strictuml
-skinparam monochrome true
+skinparam monochrome false
 
 
-interface ASTNode {
+interface ASTNode #b1e8f0 {
     getLine(): int
     getColumn(): int
 }
@@ -22,9 +22,12 @@ class VarDefinition {
 
 class FunctionDefinition {
     name: String
-    params: VarDefinition
     varDefinitions: VarDefinition
     statements: Statement
 }
+
+ASTNode <|-- Definition
+Definition <|..VarDefinition
+Definition <|.. FunctionDefinition
 
 @enduml

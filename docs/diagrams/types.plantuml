@@ -1,18 +1,42 @@
 @startuml Types
 skinparam style strictuml
-skinparam monochrome true
+skinparam monochrome false
 
-interface ASTNode {
+interface ASTNode #b1e8f0 {
     getLine(): int
     getColumn(): int
 }
 
 interface Type
 
-ASTNode <|-- Type
+class FuncType {
+    params : VarDefinition
+    returnType : Type
+}
 
+ASTNode <|-- FuncType
+
+' Tipos simples
 class IntType
+class DoubleType
+class CharType
 
 Type <|.. IntType
+Type <|.. DoubleType
+Type <|.. CharType
+
+' Tipos complejos
+class Array {
+    size : int
+    type : Type
+}
+
+class Struct {
+    body : List<Statement>
+}
+
+ASTNode <|-- Type
+ASTNode <|-- Array
+ASTNode <|-- Struct
 
 @enduml
