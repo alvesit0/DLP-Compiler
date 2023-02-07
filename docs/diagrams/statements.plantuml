@@ -16,12 +16,12 @@ class If {
     elseBody: List<Statement>
 }
 
-class IOWrite {
-    expressions : List<Expression>
+class Write {
+    expressions : Statement
 }
 
-class IORead {
-    expressions : List<Expression>
+class Read {
+    expressions : Statement
 }
 
 class While {
@@ -30,28 +30,27 @@ class While {
 }
 
 class Return {
-    ' Duda, esto es un Expression???
-    returnType : Type
+    returnType : Expression
 }
 
 ASTNode <|-- Statement
 
-Statement <|.. IOWrite
-Statement <|.. IORead
+Statement <|.. Write
+Statement <|.. Read
 Statement <|.. If
 Statement <|.. While
 Statement <|.. Return
 
 ' Un If debe tener una expresión
 If o--"1" Expression
-IOWrite o--"1" Expression
-IORead o--"1" Expression
+Write o--"1" Expression
+Read o--"1" Expression
 While o--"1" Expression
 
 ' Multiples Statement pueden tener un If
 If o--"0..n" Statement
-IOWrite o--"0..n" Statement
-IORead o--"0..n" Statement
+Write o--"0..n" Statement
+Read o--"0..n" Statement
 While o--"0..n" Statement
 Return o--"0..n" Statement
 

@@ -14,8 +14,6 @@ class FuncType {
     returnType : Type
 }
 
-ASTNode <|-- FuncType
-
 ' Tipos simples
 class IntType
 class DoubleType
@@ -24,19 +22,26 @@ class CharType
 Type <|.. IntType
 Type <|.. DoubleType
 Type <|.. CharType
+Type <|.. ArrayType
+Type <|.. StructType
+Type <|.. FuncType
 
 ' Tipos complejos
-class Array {
+class ArrayType {
     size : int
     type : Type
 }
 
-class Struct {
-    body : List<Statement>
+class StructType {
+    fields : List<StructField>
+}
+
+class StructField {
+    name : String
+    type : Type
 }
 
 ASTNode <|-- Type
-ASTNode <|-- Array
-ASTNode <|-- Struct
+StructField --o StructType
 
 @enduml

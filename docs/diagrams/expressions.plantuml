@@ -35,6 +35,20 @@ class ArithmeticOperation {
     rightExpression: Expression
 }
 
+' <, >, <=, >=
+class ComparisonOperation {
+    op: String
+    leftExpression: Expression
+    rightExpression: Expression
+}
+
+' ||, &&, !
+class BooleanOperation {
+    op: String
+    leftExpression: Expression
+    rightExpression: Expression
+}
+
 class Cast {
     leftExpression: Expression
     rightExpression: Type
@@ -44,26 +58,20 @@ class Invocation {
     arguments : List<Expression>
 }
 
-class SingleLineComment {
-    body: String
-}
-
-class MultiLineComment {
-    body: List<String>
-}
-
 ASTNode <|-- Expression
 Expression <|.. IntLiteral
 Expression <|.. DoubleLiteral
 Expression <|.. CharLiteral
 Expression <|.. Variable
 Expression <|.. ArithmeticOperation
+Expression <|.. ComparisonOperation
+Expression <|.. BooleanOperation
 Expression <|.. Cast
 Expression <|.. Invocation
-Expression <|.. SingleLineComment
-Expression <|.. MultiLineComment
 
 ArithmeticOperation o--"2" Expression
+BooleanOperation o--"2" Expression
+ComparisonOperation o--"2" Expression
 Cast o--"1" Expression
 Invocation o--"1" Expression
 
