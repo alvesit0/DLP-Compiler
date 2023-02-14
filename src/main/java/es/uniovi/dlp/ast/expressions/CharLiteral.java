@@ -1,13 +1,13 @@
 package es.uniovi.dlp.ast.expressions;
 
 public class CharLiteral extends Expression {
-    private char value;
+  private char value;
 
-    public CharLiteral(char value) {
-        this.value = value;
-    }
+  public CharLiteral(char value) {
+    this.value = value;
+  }
 
-    public char getValue() {
-        return value;
-    }
+  public char getValue() {
+    return value;
+  }
 }

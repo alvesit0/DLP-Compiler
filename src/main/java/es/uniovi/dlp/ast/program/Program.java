@@ -4,8 +4,7 @@ import es.uniovi.dlp.ast.AbstractASTNode;
 
 public class Program extends AbstractASTNode {
 
-    public Program(int line, int column) {
-        super(line, column);
-    }
-
+  public Program(int line, int column) {
+    super(line, column);
+  }
 }
