@@ -1,23 +1,23 @@
 package es.uniovi.dlp.ast.statements;
 
-import es.uniovi.dlp.ast.expressions.AbstractExpression;
+import es.uniovi.dlp.ast.expressions.Expression;
 
 import java.util.List;
 
 public class If extends Statement {
 
-    private AbstractExpression condition;
+    private Expression condition;
     private List<Statement> ifBody;
     private List<Statement> elseBody;
 
-    public If(AbstractExpression condition, List<Statement> ifBody, List<Statement> elseBody) {
+    public If(Expression condition, List<Statement> ifBody, List<Statement> elseBody) {
         this.condition = condition;
         // Condition no puede ser nulo
         this.ifBody = ifBody;
         this.elseBody = elseBody;
     }
 
-    public AbstractExpression getCondition() {
+    public Expression getCondition() {
         return condition;
     }
 

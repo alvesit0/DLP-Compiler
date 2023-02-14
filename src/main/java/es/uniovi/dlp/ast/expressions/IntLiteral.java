@@ -1,6 +1,6 @@
 package es.uniovi.dlp.ast.expressions;
 
-public class IntLiteral extends AbstractExpression {
+public class IntLiteral extends Expression {
     private int value;
 
     public IntLiteral(int value) {

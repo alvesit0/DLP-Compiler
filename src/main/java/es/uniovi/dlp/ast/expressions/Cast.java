@@ -4,26 +4,26 @@ import es.uniovi.dlp.ast.types.Type;
 
 import java.util.List;
 
-public class Cast extends AbstractExpression {
-    private AbstractExpression leftAbstractExpression;
+public class Cast extends Expression {
+    private Expression leftExpression;
     private Type rightExpression;
-    private List<AbstractExpression> arguments;
+    private List<Expression> arguments;
 
-    public Cast(AbstractExpression leftAbstractExpression, Type rightExpression, List<AbstractExpression> arguments) {
-        this.leftAbstractExpression = leftAbstractExpression;
+    public Cast(Expression leftExpression, Type rightExpression, List<Expression> arguments) {
+        this.leftExpression = leftExpression;
         this.rightExpression = rightExpression;
         this.arguments = arguments;
     }
 
-    public AbstractExpression getLeftExpression() {
-        return leftAbstractExpression;
+    public Expression getLeftExpression() {
+        return leftExpression;
     }
 
     public Type getRightExpression() {
         return rightExpression;
     }
 
-    public List<AbstractExpression> getArguments() {
+    public List<Expression> getArguments() {
         return arguments;
     }
 }

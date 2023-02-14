@@ -2,7 +2,7 @@ package es.uniovi.dlp.ast.expressions;
 
 import es.uniovi.dlp.ast.program.Definition;
 
-public class Variable extends AbstractExpression {
+public class Variable extends Expression {
     private String name;
     private Definition definition;
 

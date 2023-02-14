@@ -1,19 +1,19 @@
 package es.uniovi.dlp.ast.statements;
 
-import es.uniovi.dlp.ast.expressions.AbstractExpression;
+import es.uniovi.dlp.ast.expressions.Expression;
 
 public class Return extends Statement {
-    private AbstractExpression returnValue;
+    private Expression returnValue;
 
-    public Return(AbstractExpression returnValue) {
+    public Return(Expression returnValue) {
         this.returnValue = returnValue;
     }
 
-    public AbstractExpression getReturnValue() {
+    public Expression getReturnValue() {
         return returnValue;
     }
 
-    public void setReturnValue(AbstractExpression returnValue) {
+    public void setReturnValue(Expression returnValue) {
         this.returnValue = returnValue;
     }
 }

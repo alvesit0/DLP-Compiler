@@ -1,19 +1,19 @@
 package es.uniovi.dlp.ast.statements;
 
-import es.uniovi.dlp.ast.expressions.AbstractExpression;
+import es.uniovi.dlp.ast.expressions.Expression;
 
 import java.util.List;
 
 public class Read extends Statement {
 
-    private List<AbstractExpression> abstractExpressions;
+    private List<Expression> expressions;
 
-    public Read(List<AbstractExpression> abstractExpressions) {
-        this.abstractExpressions = abstractExpressions;
+    public Read(List<Expression> expressions) {
+        this.expressions = expressions;
         // Expressions no puede estar vacio
     }
 
-    public List<AbstractExpression> getExpressions() {
-        return abstractExpressions;
+    public List<Expression> getExpressions() {
+        return expressions;
     }
 }

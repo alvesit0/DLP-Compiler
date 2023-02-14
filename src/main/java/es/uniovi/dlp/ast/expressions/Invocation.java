@@ -2,14 +2,14 @@ package es.uniovi.dlp.ast.expressions;
 
 import java.util.List;
 
-public class Invocation extends AbstractExpression {
-    private List<AbstractExpression> arguments;
+public class Invocation extends Expression {
+    private List<Expression> arguments;
 
-    public Invocation(List<AbstractExpression> arguments) {
+    public Invocation(List<Expression> arguments) {
         this.arguments = arguments;
     }
 
-    public List<AbstractExpression> getArguments() {
+    public List<Expression> getArguments() {
         return arguments;
     }
 }
