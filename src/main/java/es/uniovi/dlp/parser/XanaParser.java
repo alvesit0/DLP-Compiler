@@ -17,29 +17,40 @@ public class XanaParser extends Parser {
 
   protected static final DFA[] _decisionToDFA;
   protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
-  public static final int INT_CONSTANT = 1,
-      CHAR_CONSTANT = 2,
-      REAL_CONSTANT = 3,
-      ID = 4,
-      SINGLE_LINE_COMMENT = 5,
-      MULTI_LINE_COMMENT = 6,
-      WS = 7;
-  public static final int RULE_program = 0;
+  public static final int T__0 = 1,
+      T__1 = 2,
+      T__2 = 3,
+      T__3 = 4,
+      INT_CONSTANT = 5,
+      CHAR_CONSTANT = 6,
+      REAL_CONSTANT = 7,
+      ID = 8,
+      SINGLE_LINE_COMMENT = 9,
+      MULTI_LINE_COMMENT = 10,
+      WS = 11;
+  public static final int RULE_program = 0,
+      RULE_var_definition = 1,
+      RULE_func_definitions = 2,
+      RULE_type = 3;
 
   private static String[] makeRuleNames() {
-    return new String[] {"program"};
+    return new String[] {"program", "var_definition", "func_definitions", "type"};
   }
 
   public static final String[] ruleNames = makeRuleNames();
 
   private static String[] makeLiteralNames() {
-    return new String[] {};
+    return new String[] {null, "'::'", "'int'", "'double'", "'char'"};
   }
 
   private static final String[] _LITERAL_NAMES = makeLiteralNames();
 
   private static String[] makeSymbolicNames() {
     return new String[] {
+      null,
+      null,
+      null,
+      null,
       null,
       "INT_CONSTANT",
       "CHAR_CONSTANT",
@@ -111,44 +122,20 @@ public class XanaParser extends Parser {
 
   @SuppressWarnings("CheckReturnValue")
   public static class ProgramContext extends ParserRuleContext {
-    public List<TerminalNode> INT_CONSTANT() {
-      return getTokens(XanaParser.INT_CONSTANT);
+    public List<Var_definitionContext> var_definition() {
+      return getRuleContexts(Var_definitionContext.class);
     }
 
-    public TerminalNode INT_CONSTANT(int i) {
-      return getToken(XanaParser.INT_CONSTANT, i);
+    public Var_definitionContext var_definition(int i) {
+      return getRuleContext(Var_definitionContext.class, i);
     }
 
-    public List<TerminalNode> CHAR_CONSTANT() {
-      return getTokens(XanaParser.CHAR_CONSTANT);
+    public List<Func_definitionsContext> func_definitions() {
+      return getRuleContexts(Func_definitionsContext.class);
     }
 
-    public TerminalNode CHAR_CONSTANT(int i) {
-      return getToken(XanaParser.CHAR_CONSTANT, i);
-    }
-
-    public List<TerminalNode> REAL_CONSTANT() {
-      return getTokens(XanaParser.REAL_CONSTANT);
-    }
-
-    public TerminalNode REAL_CONSTANT(int i) {
-      return getToken(XanaParser.REAL_CONSTANT, i);
-    }
-
-    public List<TerminalNode> ID() {
-      return getTokens(XanaParser.ID);
-    }
-
-    public TerminalNode ID(int i) {
-      return getToken(XanaParser.ID, i);
-    }
-
-    public List<TerminalNode> WS() {
-      return getTokens(XanaParser.WS);
-    }
-
-    public TerminalNode WS(int i) {
-      return getToken(XanaParser.WS, i);
+    public Func_definitionsContext func_definitions(int i) {
+      return getRuleContext(Func_definitionsContext.class, i);
     }
 
     public ProgramContext(ParserRuleContext parent, int invokingState) {
@@ -166,26 +153,36 @@ public class XanaParser extends Parser {
     enterRule(_localctx, 0, RULE_program);
     int _la;
     try {
+      int _alt;
       enterOuterAlt(_localctx, 1);
       {
-        setState(5);
+        setState(11);
         _errHandler.sync(this);
-        _la = _input.LA(1);
-        while (((_la) & ~0x3f) == 0 && ((1L << _la) & 158L) != 0) {
-          {
+        _alt = getInterpreter().adaptivePredict(_input, 0, _ctx);
+        while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
+          if (_alt == 1) {
             {
-              setState(2);
-              _la = _input.LA(1);
-              if (!(((_la) & ~0x3f) == 0 && ((1L << _la) & 158L) != 0)) {
-                _errHandler.recoverInline(this);
-              } else {
-                if (_input.LA(1) == Token.EOF) matchedEOF = true;
-                _errHandler.reportMatch(this);
-                consume();
+              {
+                setState(8);
+                var_definition();
               }
             }
           }
-          setState(7);
+          setState(13);
+          _errHandler.sync(this);
+          _alt = getInterpreter().adaptivePredict(_input, 0, _ctx);
+        }
+        setState(17);
+        _errHandler.sync(this);
+        _la = _input.LA(1);
+        while (_la == ID) {
+          {
+            {
+              setState(14);
+              func_definitions();
+            }
+          }
+          setState(19);
           _errHandler.sync(this);
           _la = _input.LA(1);
         }
@@ -200,14 +197,143 @@ public class XanaParser extends Parser {
     return _localctx;
   }
 
+  @SuppressWarnings("CheckReturnValue")
+  public static class Var_definitionContext extends ParserRuleContext {
+    public TerminalNode ID() {
+      return getToken(XanaParser.ID, 0);
+    }
+
+    public TypeContext type() {
+      return getRuleContext(TypeContext.class, 0);
+    }
+
+    public Var_definitionContext(ParserRuleContext parent, int invokingState) {
+      super(parent, invokingState);
+    }
+
+    @Override
+    public int getRuleIndex() {
+      return RULE_var_definition;
+    }
+  }
+
+  public final Var_definitionContext var_definition() throws RecognitionException {
+    Var_definitionContext _localctx = new Var_definitionContext(_ctx, getState());
+    enterRule(_localctx, 2, RULE_var_definition);
+    try {
+      enterOuterAlt(_localctx, 1);
+      {
+        setState(20);
+        match(ID);
+        setState(21);
+        match(T__0);
+        setState(22);
+        type();
+      }
+    } catch (RecognitionException re) {
+      _localctx.exception = re;
+      _errHandler.reportError(this, re);
+      _errHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  public static class Func_definitionsContext extends ParserRuleContext {
+    public TerminalNode ID() {
+      return getToken(XanaParser.ID, 0);
+    }
+
+    public Func_definitionsContext(ParserRuleContext parent, int invokingState) {
+      super(parent, invokingState);
+    }
+
+    @Override
+    public int getRuleIndex() {
+      return RULE_func_definitions;
+    }
+  }
+
+  public final Func_definitionsContext func_definitions() throws RecognitionException {
+    Func_definitionsContext _localctx = new Func_definitionsContext(_ctx, getState());
+    enterRule(_localctx, 4, RULE_func_definitions);
+    try {
+      enterOuterAlt(_localctx, 1);
+      {
+        setState(24);
+        match(ID);
+      }
+    } catch (RecognitionException re) {
+      _localctx.exception = re;
+      _errHandler.reportError(this, re);
+      _errHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  public static class TypeContext extends ParserRuleContext {
+    public TypeContext(ParserRuleContext parent, int invokingState) {
+      super(parent, invokingState);
+    }
+
+    @Override
+    public int getRuleIndex() {
+      return RULE_type;
+    }
+  }
+
+  public final TypeContext type() throws RecognitionException {
+    TypeContext _localctx = new TypeContext(_ctx, getState());
+    enterRule(_localctx, 6, RULE_type);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      {
+        setState(26);
+        _la = _input.LA(1);
+        if (!(((_la) & ~0x3f) == 0 && ((1L << _la) & 28L) != 0)) {
+          _errHandler.recoverInline(this);
+        } else {
+          if (_input.LA(1) == Token.EOF) matchedEOF = true;
+          _errHandler.reportMatch(this);
+          consume();
+        }
+      }
+    } catch (RecognitionException re) {
+      _localctx.exception = re;
+      _errHandler.reportError(this, re);
+      _errHandler.recover(this, re);
+    } finally {
+      exitRule();
+    }
+    return _localctx;
+  }
+
   public static final String _serializedATN =
-      "\u0004\u0001\u0007\t\u0002\u0000\u0007\u0000\u0001\u0000\u0005\u0000\u0004"
-          + "\b\u0000\n\u0000\f\u0000\u0007\t\u0000\u0001\u0000\u0000\u0000\u0001\u0000"
-          + "\u0000\u0001\u0002\u0000\u0001\u0004\u0007\u0007\b\u0000\u0005\u0001\u0000"
-          + "\u0000\u0000\u0002\u0004\u0007\u0000\u0000\u0000\u0003\u0002\u0001\u0000"
-          + "\u0000\u0000\u0004\u0007\u0001\u0000\u0000\u0000\u0005\u0003\u0001\u0000"
-          + "\u0000\u0000\u0005\u0006\u0001\u0000\u0000\u0000\u0006\u0001\u0001\u0000"
-          + "\u0000\u0000\u0007\u0005\u0001\u0000\u0000\u0000\u0001\u0005";
+      "\u0004\u0001\u000b\u001d\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"
+          + "\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0001\u0000\u0005\u0000"
+          + "\n\b\u0000\n\u0000\f\u0000\r\t\u0000\u0001\u0000\u0005\u0000\u0010\b\u0000"
+          + "\n\u0000\f\u0000\u0013\t\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0001"
+          + "\u0001\u0001\u0002\u0001\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0000"
+          + "\u0000\u0004\u0000\u0002\u0004\u0006\u0000\u0001\u0001\u0000\u0002\u0004"
+          + "\u001a\u0000\u000b\u0001\u0000\u0000\u0000\u0002\u0014\u0001\u0000\u0000"
+          + "\u0000\u0004\u0018\u0001\u0000\u0000\u0000\u0006\u001a\u0001\u0000\u0000"
+          + "\u0000\b\n\u0003\u0002\u0001\u0000\t\b\u0001\u0000\u0000\u0000\n\r\u0001"
+          + "\u0000\u0000\u0000\u000b\t\u0001\u0000\u0000\u0000\u000b\f\u0001\u0000"
+          + "\u0000\u0000\f\u0011\u0001\u0000\u0000\u0000\r\u000b\u0001\u0000\u0000"
+          + "\u0000\u000e\u0010\u0003\u0004\u0002\u0000\u000f\u000e\u0001\u0000\u0000"
+          + "\u0000\u0010\u0013\u0001\u0000\u0000\u0000\u0011\u000f\u0001\u0000\u0000"
+          + "\u0000\u0011\u0012\u0001\u0000\u0000\u0000\u0012\u0001\u0001\u0000\u0000"
+          + "\u0000\u0013\u0011\u0001\u0000\u0000\u0000\u0014\u0015\u0005\b\u0000\u0000"
+          + "\u0015\u0016\u0005\u0001\u0000\u0000\u0016\u0017\u0003\u0006\u0003\u0000"
+          + "\u0017\u0003\u0001\u0000\u0000\u0000\u0018\u0019\u0005\b\u0000\u0000\u0019"
+          + "\u0005\u0001\u0000\u0000\u0000\u001a\u001b\u0007\u0000\u0000\u0000\u001b"
+          + "\u0007\u0001\u0000\u0000\u0000\u0002\u000b\u0011";
   public static final ATN _ATN = new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 
   static {

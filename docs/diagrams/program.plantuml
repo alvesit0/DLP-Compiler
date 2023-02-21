@@ -23,7 +23,7 @@ class VarDefinition {
 class FunctionDefinition {
     name: String
     varDefinitions: VarDefinition
-    statements: Statement
+    statements: List<Statement>
 }
 
 ASTNode <|-- Definition
