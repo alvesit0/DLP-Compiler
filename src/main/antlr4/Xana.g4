@@ -30,49 +30,44 @@ MULTI_LINE_COMMENT: '"""'.*'"""' -> skip
 WS: [ \r\n\t] -> skip
             ;
 
-program: definition*
+program: definition* main_function
        ;
 
-definition: var_definition
-            | var_definition_list
+definition: var_definition_list
             | array_definition
             | function_definition
             | struct_definition
             | main_function
             ;
 
-var_definition: ID '::' TYPE
-            ;
-
 var_definition_list: ID','var_definition_list | var_definition
             ;
 
-function_definition: 'def' ID'('params?')' '::' function_type 'do' statement* 'end'
+var_definition: ID '::' type
             ;
 
-main_function: 'def' 'main' '('params?')' 'do' statement* 'end'
+function_definition: 'def' ID'('params?')' '::' function_type 'do' (statement|definition)* 'end'
+            ;
+
+main_function: 'def' 'main' '('params?')' 'do' (statement|definition)* 'end'
             ;
 
 array_definition: ID '::' '['array_element*']'
             ;
 
-array_element: INT_CONSTANT '::' (TYPE|array_struct_definition) | INT_CONSTANT '::' '['array_element']'
+array_element: INT_CONSTANT '::' (type|array_struct_definition) | INT_CONSTANT '::' '['array_element']'
             ;
 
-array_struct_definition: 'defstruct' 'do' statement* 'end'
+array_struct_definition: 'defstruct' 'do' definition* 'end'
             ;
 
-struct_definition: ID '::' 'defstruct' 'do' statement* 'end'
+struct_definition: ID '::' 'defstruct' 'do' definition* 'end'
             ;
 
 struct_attribute_invocation: ID'.'expression
             ;
 
-statement: var_definition
-            | var_definition_list
-            | array_definition
-            | struct_definition
-            | if
+statement:  if
             | while
             | asignation
             | function_invocation
@@ -81,7 +76,7 @@ statement: var_definition
             | in
             ;
 
-if: 'if' boolean_operation 'do' statement* (('else' statement*)*)? 'end'
+if: 'if' boolean_operation 'do' statement* ('else' statement*)*? 'end'
             ;
 
 while: 'while' boolean_operation 'do' statement* 'end'
@@ -109,7 +104,7 @@ expression: ID
             | REAL_CONSTANT
             | struct_attribute_invocation
             | array_invocation
-            | expression 'as' TYPE
+            | expression 'as' type
             | function_invocation
             | '('(expression|arithmethic_operation|boolean_operation)')'
             | '-'expression
@@ -137,6 +132,6 @@ io_list: expression','io_list | expression
 in: 'in' io_list
             ;
 
-TYPE: 'int' | 'double' | 'char';
+type: 'int' | 'double' | 'char';
 
 function_type :  'int' | 'double' | 'char' | 'void';
