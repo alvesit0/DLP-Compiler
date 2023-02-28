@@ -1,39 +1,24 @@
 grammar Xana;
 
-
 @header {
-package es.uniovi.dlp.parser;
+    package es.uniovi.dlp.parser;
+
+    import es.uniovi.dlp.ast.program.*;
+    import es.uniovi.dlp.ast.statements.*;
+    import es.uniovi.dlp.ast.expressions.*;
+    import es.uniovi.dlp.ast.types.*;
 }
 
-//program: (INT_CONSTANT | CHAR_CONSTANT | REAL_CONSTANT | ID)*
-//       ;
-
-
-INT_CONSTANT: [0-9]+
+program returns [Program ast]
+            : definition_list main_function {$ast = new Program(0, 0, $definition_list.list);}
             ;
 
-CHAR_CONSTANT: '\'' (.|'\\t'|'\\n'|'\\'[0-9][0-9][0-9]) '\''
+definition_list returns [List<Definition> list = new ArrayList<Definition>();]
+            : (definition*) {$list.add($definition.ast);}
             ;
 
-REAL_CONSTANT: [0-9]+('.'|'E''-'?)[0-9]+
-            ;
-
-ID : [_a-zA-Z][_a-zA-Z0-9]*
-            ;
-
-SINGLE_LINE_COMMENT: '#' ~[\r\n\t]* -> skip
-            ;
-
-MULTI_LINE_COMMENT: '"""'.*'"""' -> skip
-            ;
-
-WS: [ \r\n\t] -> skip
-            ;
-
-program: definition* main_function
-       ;
-
-definition: var_definition_list
+definition returns [FunctionDefinition ast]
+            : var_definition_list
             | array_definition
             | function_definition
             | struct_definition
@@ -67,6 +52,7 @@ struct_definition: ID '::' 'defstruct' 'do' definition* 'end'
 struct_attribute_invocation: ID'.'expression
             ;
 
+// returns [List<statement> list = new ArrayList<Statement>()]
 statement:  if
             | while
             | asignation
@@ -135,3 +121,26 @@ in: 'in' io_list
 type: 'int' | 'double' | 'char';
 
 function_type :  'int' | 'double' | 'char' | 'void';
+
+
+
+INT_CONSTANT: [0-9]+
+            ;
+
+CHAR_CONSTANT: '\'' (.|'\\t'|'\\n'|'\\'[0-9][0-9][0-9]) '\''
+            ;
+
+REAL_CONSTANT: [0-9]+('.'|'E''-'?)[0-9]+
+            ;
+
+ID : [_a-zA-Z][_a-zA-Z0-9]*
+            ;
+
+SINGLE_LINE_COMMENT: '#' ~[\r\n\t]* -> skip
+            ;
+
+MULTI_LINE_COMMENT: '"""'.*?'"""' -> skip
+            ;
+
+WS: [ \r\n\t] -> skip
+            ;
