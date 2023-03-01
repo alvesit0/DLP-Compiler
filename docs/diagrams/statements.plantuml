@@ -55,10 +55,6 @@ Assignment o--"2" Expression
 Return o--"1" Expression
 
 If o--"0..n" Statement
-Write o--"0..n" Statement
-Read o--"0..n" Statement
 While o--"0..n" Statement
-Return o--"0..n" Statement
-Assignment o--"0..n" Statement
 
 @enduml
