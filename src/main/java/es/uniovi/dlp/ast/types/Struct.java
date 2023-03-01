@@ -4,15 +4,15 @@ import es.uniovi.dlp.ast.ASTNode;
 import es.uniovi.dlp.ast.statements.Statement;
 import java.util.List;
 
-public class Struct implements ASTNode {
+public class Struct implements Type {
 
-  private List<Statement> fields;
+  private List<StructField> fields;
 
-  public Struct(List<Statement> fields) {
+  public Struct(List<StructField> fields) {
     this.fields = fields;
   }
 
-  public List<Statement> getFields() {
+  public List<StructField> getFields() {
     return fields;
   }
 

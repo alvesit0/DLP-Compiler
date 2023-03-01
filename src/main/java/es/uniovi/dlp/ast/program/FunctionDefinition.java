@@ -1,15 +1,20 @@
 package es.uniovi.dlp.ast.program;
 
 import es.uniovi.dlp.ast.statements.Statement;
+import es.uniovi.dlp.ast.types.Type;
 
-public class FunctionDefinition extends Definition {
+import java.util.List;
+
+public class FunctionDefinition extends AbstractDefinition {
+
   private String name;
-  private VarDefinition varDefinitions;
-  private Statement statements;
+  private VarDefinition varDefinition;
+  private List<Statement> statements;
 
-  public FunctionDefinition(String name, VarDefinition varDefinitions, Statement statements) {
+  public FunctionDefinition(int line, int column, Type type, String name, VarDefinition varDefinition, List<Statement> statements) {
+    super(line, column, type);
     this.name = name;
-    this.varDefinitions = varDefinitions;
+    this.varDefinition = varDefinition;
     this.statements = statements;
   }
 
@@ -17,11 +22,11 @@ public class FunctionDefinition extends Definition {
     return name;
   }
 
-  public VarDefinition getVarDefinitions() {
-    return varDefinitions;
+  public VarDefinition getVarDefinition() {
+    return varDefinition;
   }
 
-  public Statement getStatements() {
+  public List<Statement> getStatements() {
     return statements;
   }
 }

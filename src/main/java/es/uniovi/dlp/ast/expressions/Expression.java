@@ -1,16 +1,10 @@
 package es.uniovi.dlp.ast.expressions;
 
 import es.uniovi.dlp.ast.ASTNode;
+import es.uniovi.dlp.ast.program.Definition;
+import es.uniovi.dlp.ast.types.Type;
 
-public abstract class Expression implements ASTNode {
-
-  @Override
-  public int getLine() {
-    return 0;
-  }
-
-  @Override
-  public int getColumn() {
-    return 0;
-  }
+public interface Expression extends ASTNode {
+    Type getType();
+    Definition getDefinition();
 }

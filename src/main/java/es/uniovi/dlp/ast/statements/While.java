@@ -1,9 +1,10 @@
 package es.uniovi.dlp.ast.statements;
 
+import es.uniovi.dlp.ast.AbstractASTNode;
 import es.uniovi.dlp.ast.expressions.Expression;
 import java.util.List;
 
-public class While extends Statement {
+public class While implements Statement {
   private Expression condition;
   private List<Statement> body;
 
@@ -19,5 +20,15 @@ public class While extends Statement {
 
   public List<Statement> getBody() {
     return body;
+  }
+
+  @Override
+  public int getLine() {
+    return 0;
+  }
+
+  @Override
+  public int getColumn() {
+    return 0;
   }
 }

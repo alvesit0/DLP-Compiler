@@ -1,11 +1,12 @@
 package es.uniovi.dlp.ast.expressions;
 
-public class ComparisonOperation extends Expression {
+public class ComparisonOperation extends AbstractExpression {
   private String op;
   private Expression leftExpression;
   private Expression rightExpression;
 
-  public ComparisonOperation(String op, Expression leftExpression, Expression rightExpression) {
+  public ComparisonOperation(int line, int column, String op, Expression leftExpression, Expression rightExpression) {
+    super(line, column);
     this.op = op;
     this.leftExpression = leftExpression;
     this.rightExpression = rightExpression;

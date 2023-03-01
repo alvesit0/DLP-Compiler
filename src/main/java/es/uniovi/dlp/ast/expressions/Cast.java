@@ -3,15 +3,14 @@ package es.uniovi.dlp.ast.expressions;
 import es.uniovi.dlp.ast.types.Type;
 import java.util.List;
 
-public class Cast extends Expression {
+public class Cast extends AbstractExpression {
   private Expression leftExpression;
   private Type rightExpression;
-  private List<Expression> arguments;
 
-  public Cast(Expression leftExpression, Type rightExpression, List<Expression> arguments) {
+  public Cast(int line, int column, Expression leftExpression, Type rightExpression) {
+    super(line, column);
     this.leftExpression = leftExpression;
     this.rightExpression = rightExpression;
-    this.arguments = arguments;
   }
 
   public Expression getLeftExpression() {
@@ -20,9 +19,5 @@ public class Cast extends Expression {
 
   public Type getRightExpression() {
     return rightExpression;
-  }
-
-  public List<Expression> getArguments() {
-    return arguments;
   }
 }

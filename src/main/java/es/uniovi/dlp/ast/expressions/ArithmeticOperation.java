@@ -1,11 +1,12 @@
 package es.uniovi.dlp.ast.expressions;
 
-public class ArithmeticOperation extends Expression {
+public class ArithmeticOperation extends AbstractExpression {
   private String op;
   private Expression leftExpression;
   private Expression rightExpression;
 
-  public ArithmeticOperation(String op, Expression leftExpression, Expression rightExpression) {
+  public ArithmeticOperation(int line, int column, String op, Expression leftExpression, Expression rightExpression) {
+    super(line, column);
     this.op = op;
     this.leftExpression = leftExpression;
     this.rightExpression = rightExpression;

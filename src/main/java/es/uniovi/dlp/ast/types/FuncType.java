@@ -3,7 +3,7 @@ package es.uniovi.dlp.ast.types;
 import es.uniovi.dlp.ast.ASTNode;
 import es.uniovi.dlp.ast.program.VarDefinition;
 
-public class FuncType implements ASTNode {
+public class FuncType implements Type {
 
   private VarDefinition params;
   private Type returnType;

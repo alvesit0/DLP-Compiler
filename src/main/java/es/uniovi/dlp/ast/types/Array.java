@@ -2,7 +2,7 @@ package es.uniovi.dlp.ast.types;
 
 import es.uniovi.dlp.ast.ASTNode;
 
-public class Array implements ASTNode {
+public class Array implements Type {
 
   private int size;
   private Type type;
