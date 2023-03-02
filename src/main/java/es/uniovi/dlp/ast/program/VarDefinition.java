@@ -1,9 +1,8 @@
 package es.uniovi.dlp.ast.program;
 
-import es.uniovi.dlp.ast.statements.Statement;
 import es.uniovi.dlp.ast.types.Type;
 
-public class VarDefinition extends AbstractDefinition implements Statement {
+public class VarDefinition extends AbstractDefinition {
 
   private String name;
 
