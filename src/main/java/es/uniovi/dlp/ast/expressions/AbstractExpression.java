@@ -6,22 +6,22 @@ import es.uniovi.dlp.ast.types.Type;
 
 public class AbstractExpression extends AbstractASTNode implements Expression {
 
-    private Type type;
-    private Definition definition;
+  private Type type;
+  private Definition definition;
 
-    public AbstractExpression(int line, int column) {
-        super(line, column);
-    }
+  public AbstractExpression(int line, int column) {
+    super(line, column);
+  }
 
-    public Type getType() {
-        return type;
-    }
+  public Type getType() {
+    return type;
+  }
 
-    public void setType(Type type) {
-        this.type = type;
-    }
+  public void setType(Type type) {
+    this.type = type;
+  }
 
-    public Definition getDefinition() {
-        return definition;
-    }
+  public Definition getDefinition() {
+    return definition;
+  }
 }

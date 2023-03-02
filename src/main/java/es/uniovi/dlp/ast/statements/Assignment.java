@@ -1,6 +1,5 @@
 package es.uniovi.dlp.ast.statements;
 
-import es.uniovi.dlp.ast.AbstractASTNode;
 import es.uniovi.dlp.ast.expressions.Expression;
 
 public class Assignment implements Statement {
@@ -16,10 +15,12 @@ public class Assignment implements Statement {
 
   @Override
   public String toString() {
-    return "Assigment{" +
-            "leftHandSide=" + leftExpression.toString() +
-            ", rightHandSide=" + rightExpression.toString() +
-            '}';
+    return "Assigment{"
+        + "leftHandSide="
+        + leftExpression.toString()
+        + ", rightHandSide="
+        + rightExpression.toString()
+        + '}';
   }
 
   @Override

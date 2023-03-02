@@ -1,7 +1,6 @@
 package es.uniovi.dlp.ast.expressions;
 
 import es.uniovi.dlp.ast.types.Type;
-import java.util.List;
 
 public class Cast extends AbstractExpression {
   private Expression leftExpression;

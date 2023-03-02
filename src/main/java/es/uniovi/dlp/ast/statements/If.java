@@ -1,6 +1,5 @@
 package es.uniovi.dlp.ast.statements;
 
-import es.uniovi.dlp.ast.AbstractASTNode;
 import es.uniovi.dlp.ast.expressions.Expression;
 import java.util.List;
 
@@ -10,7 +9,12 @@ public class If implements Statement {
   private List<Statement> ifBody;
   private List<Statement> elseBody;
 
-  public If(int line, int column, Expression condition, List<Statement> ifBody, List<Statement> elseBody) {
+  public If(
+      int line,
+      int column,
+      Expression condition,
+      List<Statement> ifBody,
+      List<Statement> elseBody) {
     this.condition = condition;
     // Condition no puede ser nulo
     this.ifBody = ifBody;

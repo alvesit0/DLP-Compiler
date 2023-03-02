@@ -1,31 +1,21 @@
 grammar Xana;
 
-@header {
-    package es.uniovi.dlp.parser;
 
-    import es.uniovi.dlp.ast.program.*;
-    import es.uniovi.dlp.ast.statements.*;
-    import es.uniovi.dlp.ast.expressions.*;
-    import es.uniovi.dlp.ast.types.*;
+@header {
+package es.uniovi.dlp.parser;
 }
 
-program returns [Program ast]
-            : definition_list main_function {$ast = new Program(0, 0, $definition_list.list);}
-            ;
+program: definition* main_function
+       ;
 
-definition_list returns [List<Definition> list = new ArrayList<Definition>();]
-            : (definition*) {$list.add($definition.ast);}
-            ;
-
-definition returns [FunctionDefinition ast]
-            : var_definition_list
+definition: var_definition_list
             | array_definition
             | function_definition
             | struct_definition
             | main_function
             ;
 
-var_definition_list: ID','var_definition_list | var_definition
+var_definition_list: ID','var_definition_list | var_definition | array_definition
             ;
 
 var_definition: ID '::' type
@@ -52,7 +42,6 @@ struct_definition: ID '::' 'defstruct' 'do' definition* 'end'
 struct_attribute_invocation: ID'.'expression
             ;
 
-// returns [List<statement> list = new ArrayList<Statement>()]
 statement:  if
             | while
             | asignation
@@ -123,7 +112,6 @@ type: 'int' | 'double' | 'char';
 function_type :  'int' | 'double' | 'char' | 'void';
 
 
-
 INT_CONSTANT: [0-9]+
             ;
 
@@ -139,7 +127,7 @@ ID : [_a-zA-Z][_a-zA-Z0-9]*
 SINGLE_LINE_COMMENT: '#' ~[\r\n\t]* -> skip
             ;
 
-MULTI_LINE_COMMENT: '"""'.*?'"""' -> skip
+MULTI_LINE_COMMENT: '"""'(.)*?'"""' -> skip
             ;
 
 WS: [ \r\n\t] -> skip

@@ -1,7 +1,6 @@
 package es.uniovi.dlp.ast.program;
 
 import es.uniovi.dlp.ast.ASTNode;
-import es.uniovi.dlp.ast.AbstractASTNode;
 import java.util.List;
 
 public class Program implements ASTNode {

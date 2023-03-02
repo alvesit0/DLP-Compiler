@@ -5,7 +5,8 @@ public class BooleanOperation extends AbstractExpression {
   private Expression leftExpression;
   private Expression rightExpression;
 
-  public BooleanOperation(int line, int column, String op, Expression leftExpression, Expression rightExpression) {
+  public BooleanOperation(
+      int line, int column, String op, Expression leftExpression, Expression rightExpression) {
     super(line, column);
     this.op = op;
     this.leftExpression = leftExpression;

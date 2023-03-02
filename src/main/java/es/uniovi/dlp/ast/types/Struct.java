@@ -1,7 +1,5 @@
 package es.uniovi.dlp.ast.types;
 
-import es.uniovi.dlp.ast.ASTNode;
-import es.uniovi.dlp.ast.statements.Statement;
 import java.util.List;
 
 public class Struct implements Type {
