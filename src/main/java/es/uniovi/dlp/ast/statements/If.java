@@ -9,12 +9,7 @@ public class If implements Statement {
   private List<Statement> ifBody;
   private List<Statement> elseBody;
 
-  public If(
-      int line,
-      int column,
-      Expression condition,
-      List<Statement> ifBody,
-      List<Statement> elseBody) {
+  public If(Expression condition, List<Statement> ifBody, List<Statement> elseBody) {
     this.condition = condition;
     // Condition no puede ser nulo
     this.ifBody = ifBody;
@@ -41,5 +36,17 @@ public class If implements Statement {
   @Override
   public int getColumn() {
     return 0;
+  }
+
+  @Override
+  public String toString() {
+    return "*** IF STATEMENT ***"
+        + "\nCondition: "
+        + condition
+        + "\nIf Body: \n"
+        + ifBody
+        + "\nElse Body: \n"
+        + elseBody
+        + "}\n\n";
   }
 }

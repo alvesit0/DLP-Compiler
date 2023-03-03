@@ -30,4 +30,9 @@ public class While implements Statement {
   public int getColumn() {
     return 0;
   }
+
+  @Override
+  public String toString() {
+    return "*** WHILE STATEMENT ***" + "\nCondition: " + condition + "\nBody: \n" + body + "}\n\n";
+  }
 }

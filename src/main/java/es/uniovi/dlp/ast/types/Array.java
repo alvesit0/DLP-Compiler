@@ -1,11 +1,12 @@
 package es.uniovi.dlp.ast.types;
 
-public class Array implements Type {
+public class Array extends AbstractType {
 
   private int size;
   private Type type;
 
-  public Array(int size, Type type) {
+  public Array(int line, int column, int size, Type type) {
+    super(line, column);
     this.size = size;
     this.type = type;
   }
@@ -19,12 +20,7 @@ public class Array implements Type {
   }
 
   @Override
-  public int getLine() {
-    return 0;
-  }
-
-  @Override
-  public int getColumn() {
-    return 0;
+  public String toString() {
+    return "array";
   }
 }

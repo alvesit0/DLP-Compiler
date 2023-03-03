@@ -1,13 +1,13 @@
 package es.uniovi.dlp.ast.types;
 
-public class DoubleType implements Type {
-  @Override
-  public int getLine() {
-    return 0;
+public class DoubleType extends AbstractType {
+
+  public DoubleType(int line, int column) {
+    super(line, column);
   }
 
   @Override
-  public int getColumn() {
-    return 0;
+  public String toString() {
+    return "double";
   }
 }

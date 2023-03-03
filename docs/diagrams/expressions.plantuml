@@ -55,6 +55,7 @@ class Cast {
 }
 
 class Invocation {
+    name : String
     arguments : List<Expression>
 }
 

@@ -7,7 +7,7 @@ import java.util.List;
 public class FunctionDefinition extends AbstractDefinition {
 
   private String name;
-  private VarDefinition varDefinition;
+  private List<VarDefinition> params;
   private List<Statement> statements;
 
   public FunctionDefinition(
@@ -15,11 +15,11 @@ public class FunctionDefinition extends AbstractDefinition {
       int column,
       Type type,
       String name,
-      VarDefinition varDefinition,
+      List<VarDefinition> params,
       List<Statement> statements) {
     super(line, column, type);
     this.name = name;
-    this.varDefinition = varDefinition;
+    this.params = params;
     this.statements = statements;
   }
 
@@ -27,11 +27,27 @@ public class FunctionDefinition extends AbstractDefinition {
     return name;
   }
 
-  public VarDefinition getVarDefinition() {
-    return varDefinition;
-  }
-
   public List<Statement> getStatements() {
     return statements;
+  }
+
+  public List<VarDefinition> getParams() {
+    return params;
+  }
+
+  @Override
+  public String toString() {
+    return "*** FUNCTION DEFINITION ***"
+        + "\nLine: "
+        + getLine()
+        + "\nColumn: "
+        + getColumn()
+        + "\nType: "
+        + getType()
+        + "\nParams: "
+        + getParams()
+        + "\nName: "
+        + getName()
+        + "\n\n";
   }
 }

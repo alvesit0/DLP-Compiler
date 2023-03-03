@@ -1,6 +1,5 @@
 grammar Xana;
 
-
 @header {
 package es.uniovi.dlp.parser;
 
@@ -15,6 +14,9 @@ program returns [Program ast]
             : definition_list {$ast = new Program(0, 0, $definition_list.list);}
             ;
 
+
+// ########## DEFINITIONS ##########
+
 definition_list returns [List<Definition> list = new ArrayList<Definition>();]
             : (definition
                 {$list.addAll($definition.list);}
@@ -23,150 +25,159 @@ definition_list returns [List<Definition> list = new ArrayList<Definition>();]
             ;
 
 definition returns [List<Definition> list = new ArrayList<Definition>();]
-            : var_definition_list
-                {$list.addAll($var_definition_list.list);}
-            | array_definition
-                {$list.add(null);} // ##################### TODO
-            | function_definition
-                {$list.add($function_definition.ast);} // ##################### TODO
-            | struct_definition
-                {$list.add(null);} // ##################### TODO
-            | main_function
-                {$list.add(null);} // ##################### TODO
+            : var_definition_list {$list.addAll($var_definition_list.list);}
+            | function_definition {$list.add($function_definition.ast);}
+            | main_function {$list.add($main_function.ast);}
             ;
 
 var_definition_list returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
-            : v=ID
-                {$list.add(new VarDefinition($v.getLine(), $v.getCharPositionInLine() + 1, null, $v.text));}
-              (','v2=ID
-                {$list.add(new VarDefinition($v2.getLine(), $v2.getCharPositionInLine() + 1, null, $v2.text));}
-              )* '::' type
-            | array_definition
-                {$list.add(null);} // ##################### TODO
-            ;
-
-var_definition returns [VarDefinition ast]
-            : v=(ID|INT_CONSTANT) '::' type
-                {$ast = new VarDefinition($v.getLine(), $v.getCharPositionInLine() + 1, null, $v.text);}
+            : ids+=ID (','ids+=ID)* '::' t=type {
+                for (var id : $ids) {
+                    $list.add(new VarDefinition(id.getLine(), id.getCharPositionInLine() + 1, $type.ast, id.getText()));
+                }
+            }
             ;
 
 function_definition returns [FunctionDefinition ast]
-            : 'def' f=ID'('params?')' '::' function_type 'do' (statement|definition)* 'end'
-                {$ast = new FunctionDefinition($f.getLine(), $f.getCharPositionInLine() + 1, null, $f.text, null, null);}
+            : 'def' f=ID'('params')' '::' t=function_type 'do' function_body 'end'
+                {$ast = new FunctionDefinition($f.getLine(), $f.getCharPositionInLine() + 1, $t.ast, $f.text, $params.list, $function_body.list);}
             ;
 
 main_function returns [FunctionDefinition ast]
-            : 'def' m='main' '('params?')' 'do' (statement|definition)* 'end'
-                {$ast = new FunctionDefinition($m.getLine(), $m.getCharPositionInLine() + 1, null, "main", null, null);}
+            : 'def' m='main' '('params')' 'do' function_body 'end'
+                {$ast = new FunctionDefinition($m.getLine(), $m.getCharPositionInLine() + 1,
+                new VoidType($m.getLine(), $m.getCharPositionInLine() + 1), "main", $params.list, $function_body.list);}
             ;
 
-array_definition
-            : ID '::' '['array_element*']'
+params returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
+            : var1=ID '::' t1=type {$list.add(new VarDefinition($var1.getLine(), $var1.getCharPositionInLine() + 1, $t1.ast, $var1.text));}
+                (',' var2=ID '::' t2=type {$list.add(new VarDefinition($var2.getLine(), $var2.getCharPositionInLine() + 1, $t2.ast, $var2.text));})*
+            |
             ;
 
-array_element
-            : INT_CONSTANT '::' (type|array_struct_definition)
-            | INT_CONSTANT '::' '['array_element']'
+function_body returns [List<Statement> list = new ArrayList<>();]
+            : (var_definition_list
+                {$list.addAll($var_definition_list.list);}
+              )*(statement
+                {$list.addAll($statement.list);}
+              )*
             ;
 
-array_struct_definition
-            : 'defstruct' 'do' definition* 'end'
+
+// ########## STATEMENTS ##########
+
+statement returns [List<Statement> list = new ArrayList<Statement>();]
+            : if_else_statement {$list.add($if_else_statement.ast);}
+            | while_statement {$list.add($while_statement.ast);}
+            | assignment_statement {$list.add($assignment_statement.ast);}
+            | function_invocation {$list.add($function_invocation.ast);}
+            | return_statement {$list.add($return_statement.ast);}
+            | puts_statement {$list.add($puts_statement.ast);}
+            | in_statement {$list.add($in_statement.ast);}
             ;
 
-struct_definition
-            : ID '::' 'defstruct' 'do' definition* 'end'
+statement_list returns [List<Statement> list = new ArrayList<Statement>();]
+            : (statement {$list.addAll($statement.list);})*
             ;
 
-struct_attribute_invocation
-            : ID'.'expression
+if_else_statement returns [If ast]
+            : 'if' expression 'do' sl1=statement_list 'end' {$ast = new If(null, $sl1.list, null);}
+            | 'if' expression 'do' sl1=statement_list 'else' sl2=statement_list 'end' {$ast = new If(null, $sl1.list, $sl2.list);}
             ;
 
-statement
-            : if
-            | while
-            | asignation
-            | function_invocation
-            | return
-            | puts
-            | in
+while_statement returns [While ast]
+            : 'while' e=expression 'do' sl=statement_list 'end' {$ast = new While($e.ast, $sl.list);}
             ;
 
-if
-            : 'if' boolean_operation 'do' statement* ('else' statement*)*? 'end'
+assignment_statement returns [Assignment ast]
+            : e1=expression '=' e2=expression {$ast = new Assignment($e1.ast, $e2.ast);}
             ;
 
-while
-            : 'while' boolean_operation 'do' statement* 'end'
+return_statement returns [Return ast]
+            : 'return' expression {$ast = new Return($expression.ast);}
             ;
 
-asignation
-            : (ID|array_invocation|struct_attribute_invocation) '=' (expression | arithmethic_operation | boolean_operation)
+puts_statement returns [Write ast]
+            : 'puts' io_list {$ast = new Write($io_list.list);}
             ;
 
-array_invocation
-            : ID'['(expression|arithmethic_operation)']'('['(expression|arithmethic_operation)']')*
+in_statement returns [Read ast]
+            : 'in' io_list {$ast = new Read($io_list.list);}
             ;
 
-function_invocation
-            : ID'('function_invocation_params?')'
+io_list returns [List<Expression> list = new ArrayList<Expression>();]
+            : expression {$list.add($expression.ast);} (','expression{$list.add($expression.ast);})*
             ;
 
-function_invocation_params
-            : (expression|arithmethic_operation)','function_invocation_params
-            | (expression|arithmethic_operation)
+
+// ########## EXPRESSIONS ##########
+
+expression returns [Expression ast]
+            : id=ID {$ast = new Variable($id.getLine(), $id.getCharPositionInLine() + 1, $id.text);}
+            | intconst=INT_CONSTANT {$ast = new IntLiteral($intconst.getLine(), $intconst.getCharPositionInLine() + 1, LexerHelper.lexemeToInt($intconst.text));}
+            | charconst=CHAR_CONSTANT {$ast = new CharLiteral($charconst.getLine(), $charconst.getCharPositionInLine() + 1, LexerHelper.lexemeToChar($charconst.text));}
+            | realconst=REAL_CONSTANT {$ast = new DoubleLiteral($realconst.getLine(), $realconst.getCharPositionInLine() + 1, LexerHelper.lexemeToReal($realconst.text));}
+            | expr=expression'.'attribute=ID {$ast = new StructAccess($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $attribute.text);}
+            | array=expression'['indexes+=expression']'('['indexes+=expression']')*
+                {
+                    List<Expression> aux = new ArrayList<Expression>();
+                    $indexes.forEach(e -> aux.add(e.ast));
+                    $ast = new ArrayAccess($array.ast.getLine(), $array.ast.getColumn(), $array.ast, aux);
+                }
+            | expr=expression 'as' type {$ast = new Cast($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $type.ast);}
+            | function_invocation {$ast = $function_invocation.ast;}
+            | expr1=expression op=('+'|'-'|'*'|'/'|'%') expr2=expression {$ast = new ArithmeticOperation($op.getLine(), $op.getCharPositionInLine() + 1, $op.text, $expr1.ast, $expr2.ast);}
+            | '!'expression {$ast = new BooleanNot($expression.ast.getLine(), $expression.ast.getColumn(), $expression.ast);}
+            | expr1=expression op=('||'|'&&') expr2=expression {$ast = new ComparisonOperation($op.getLine(), $op.getCharPositionInLine() + 1, $op.text, $expr1.ast, $expr2.ast);}
+            | expr1=expression op=('<'|'>'|'<='|'>='|'=='|'!=') expr2=expression {$ast = new BooleanOperation($op.getLine(), $op.getCharPositionInLine() + 1, $op.text, $expr1.ast, $expr2.ast);}
+            | '('expression')' {$ast = $expression.ast;}
+            | '-'expression {$ast = new Negative($expression.ast.getLine(), $expression.ast.getColumn(), $expression.ast);}
             ;
 
-return
-            : 'return' (expression|arithmethic_operation|boolean_operation)
+function_invocation returns [Invocation ast]
+            : f=ID'('function_invocation_params')' {$ast = new Invocation($f.getLine(), $f.getCharPositionInLine() + 1, $f.text, $function_invocation_params.list);}
             ;
 
-expression
-            : ID
-            | INT_CONSTANT
-            | CHAR_CONSTANT
-            | REAL_CONSTANT
-            | struct_attribute_invocation
-            | array_invocation
-            | expression 'as' type
-            | function_invocation
-            | '('(expression|arithmethic_operation|boolean_operation)')'
-            | '-'expression
-            | '!'expression
+function_invocation_params returns [List<Expression> list = new ArrayList<Expression>()]
+            : expr1=expression {$list.add($expr1.ast);} (','expr2=expression {$list.add($expr2.ast);})*
+            |
             ;
 
-arithmethic_operation
-            : expression ('+'|'-'|'*'|'/'|'%') expression (('+'|'-'|'*'|'/'|'%') expression)*
+
+// ########## TYPES ##########
+
+type returns [Type ast]
+            : primitive_type {$ast = $primitive_type.ast;} // PRIMITIVES
+            | t='['size=INT_CONSTANT'::' at=type ']' {$ast = new Array($t.getLine(), $t.getCharPositionInLine() + 1, LexerHelper.lexemeToInt($size.text), $at.ast);} // ARRAYS
+            | t='defstruct' 'do' struct_field_list 'end' {$ast = new Struct($t.getLine(), $t.getCharPositionInLine() + 1, $struct_field_list.list);} // STRUCTS
             ;
 
-boolean_operation
-            : '!'boolean_operation
-            | (expression|arithmethic_operation) (('||'|'&&') boolean_operation)*
-            | (expression|arithmethic_operation) ('<'|'>'|'<='|'>='|'=='|'!=') (expression|arithmethic_operation) (('||'|'&&') boolean_operation)*
-            | expression
+struct_field_list returns [List<StructField> list = new ArrayList<StructField>();]
+            : (struct_field {$list.addAll($struct_field.list);})*
             ;
 
-params
-            : var_definition | var_definition','params
+struct_field returns [List<StructField> list = new ArrayList<StructField>();]
+            : ids+=ID (','ids+=ID)* '::' t=type
+                {
+                    for (var id : $ids) {
+                        $list.add(new StructField(id.getText(), $type.ast));
+                    }
+                }
             ;
 
-puts
-            : 'puts' io_list
+function_type returns [Type ast]
+            : primitive_type {$ast = $primitive_type.ast;}
+            | t='void' {$ast = new VoidType($t.getLine(), $t.getCharPositionInLine() + 1);}
             ;
 
-io_list
-            : expression','io_list | expression
+primitive_type returns [Type ast]
+            : t='int' {$ast = new IntType($t.getLine(), $t.getCharPositionInLine() + 1);}
+            | t='double' {$ast = new DoubleType($t.getLine(), $t.getCharPositionInLine() + 1);}
+            | t='char' {$ast = new CharType($t.getLine(), $t.getCharPositionInLine() + 1);}
             ;
 
-in
-            : 'in' io_list
-            ;
 
-type
-            : 'int' | 'double' | 'char' | '['(expression|var_definition)']';
-
-function_type
-            :  'int' | 'double' | 'char' | 'void';
-
+// ########## LEXEMES ##########
 
 INT_CONSTANT: [0-9]+
             ;

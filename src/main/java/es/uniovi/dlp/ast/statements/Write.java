@@ -1,17 +1,18 @@
 package es.uniovi.dlp.ast.statements;
 
 import es.uniovi.dlp.ast.expressions.Expression;
+import java.util.List;
 
 public class Write implements Statement {
 
-  private Expression expression;
+  private List<Expression> expressions;
 
-  public Write(Expression expression) {
-    this.expression = expression;
+  public Write(List<Expression> expressions) {
+    this.expressions = expressions;
   }
 
-  public Expression getExpressions() {
-    return expression;
+  public List<Expression> getExpressions() {
+    return expressions;
   }
 
   @Override

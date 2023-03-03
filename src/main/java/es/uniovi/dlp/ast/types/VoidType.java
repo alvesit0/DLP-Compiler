@@ -1,12 +1,13 @@
 package es.uniovi.dlp.ast.types;
 
-public class IntType extends AbstractType {
-  public IntType(int line, int column) {
+public class VoidType extends AbstractType {
+
+  public VoidType(int line, int column) {
     super(line, column);
   }
 
   @Override
   public String toString() {
-    return "int";
+    return "void";
   }
 }

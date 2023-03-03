@@ -2,11 +2,12 @@ package es.uniovi.dlp.ast.types;
 
 import java.util.List;
 
-public class Struct implements Type {
+public class Struct extends AbstractType {
 
   private List<StructField> fields;
 
-  public Struct(List<StructField> fields) {
+  public Struct(int line, int column, List<StructField> fields) {
+    super(line, column);
     this.fields = fields;
   }
 
@@ -22,5 +23,10 @@ public class Struct implements Type {
   @Override
   public int getColumn() {
     return 0;
+  }
+
+  @Override
+  public String toString() {
+    return "struct";
   }
 }

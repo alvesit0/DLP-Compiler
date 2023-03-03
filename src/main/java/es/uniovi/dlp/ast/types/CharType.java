@@ -1,13 +1,13 @@
 package es.uniovi.dlp.ast.types;
 
-public class CharType implements Type {
-  @Override
-  public int getLine() {
-    return 0;
+public class CharType extends AbstractType {
+
+  public CharType(int line, int column) {
+    super(line, column);
   }
 
   @Override
-  public int getColumn() {
-    return 0;
+  public String toString() {
+    return "char";
   }
 }
