@@ -42,7 +42,7 @@ class ComparisonOperation {
     rightExpression: Expression
 }
 
-' ||, &&, !
+' ||, &&
 class BooleanOperation {
     op: String
     leftExpression: Expression
@@ -55,7 +55,7 @@ class Cast {
 }
 
 class Invocation {
-    name : String
+    expression : Expression
     arguments : List<Expression>
 }
 

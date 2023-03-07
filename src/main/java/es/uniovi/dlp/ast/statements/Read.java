@@ -1,18 +1,17 @@
 package es.uniovi.dlp.ast.statements;
 
 import es.uniovi.dlp.ast.expressions.Expression;
-import java.util.List;
 
 public class Read implements Statement {
 
-  private List<Expression> expressions;
+  private Expression expression;
 
-  public Read(List<Expression> expressions) {
-    this.expressions = expressions;
+  public Read(Expression expression) {
+    this.expression = expression;
   }
 
-  public List<Expression> getExpressions() {
-    return expressions;
+  public Expression getExpression() {
+    return expression;
   }
 
   @Override

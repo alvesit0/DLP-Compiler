@@ -609,12 +609,16 @@ public class XanaParser extends Parser {
             new FunctionDefinition(
                 ((Function_definitionContext) _localctx).f.getLine(),
                 ((Function_definitionContext) _localctx).f.getCharPositionInLine() + 1,
-                ((Function_definitionContext) _localctx).t.ast,
+                new FuncType(
+                    ((Function_definitionContext) _localctx).t.ast.getLine(),
+                    ((Function_definitionContext) _localctx).t.ast.getColumn(),
+                    ((Function_definitionContext) _localctx).params.list,
+                    ((Function_definitionContext) _localctx).t.ast),
                 (((Function_definitionContext) _localctx).f != null
                     ? ((Function_definitionContext) _localctx).f.getText()
                     : null),
-                ((Function_definitionContext) _localctx).params.list,
-                ((Function_definitionContext) _localctx).function_body.list);
+                ((Function_definitionContext) _localctx).function_body.statementList,
+                ((Function_definitionContext) _localctx).function_body.varDefinitionList);
       }
     } catch (RecognitionException re) {
       _localctx.exception = re;
@@ -677,12 +681,16 @@ public class XanaParser extends Parser {
             new FunctionDefinition(
                 ((Main_functionContext) _localctx).m.getLine(),
                 ((Main_functionContext) _localctx).m.getCharPositionInLine() + 1,
-                new VoidType(
+                new FuncType(
                     ((Main_functionContext) _localctx).m.getLine(),
-                    ((Main_functionContext) _localctx).m.getCharPositionInLine() + 1),
+                    ((Main_functionContext) _localctx).m.getCharPositionInLine() + 1,
+                    ((Main_functionContext) _localctx).params.list,
+                    new VoidType(
+                        ((Main_functionContext) _localctx).m.getLine(),
+                        ((Main_functionContext) _localctx).m.getCharPositionInLine() + 1)),
                 "main",
-                ((Main_functionContext) _localctx).params.list,
-                ((Main_functionContext) _localctx).function_body.list);
+                ((Main_functionContext) _localctx).function_body.statementList,
+                ((Main_functionContext) _localctx).function_body.varDefinitionList);
       }
     } catch (RecognitionException re) {
       _localctx.exception = re;
@@ -804,8 +812,8 @@ public class XanaParser extends Parser {
 
   @SuppressWarnings("CheckReturnValue")
   public static class Function_bodyContext extends ParserRuleContext {
-    public List<Statement> list = new ArrayList<>();
-    ;
+    public List<Statement> statementList = new ArrayList<>();
+    public List<VarDefinition> varDefinitionList = new ArrayList<>();
     public Var_definition_listContext var_definition_list;
     public StatementContext statement;
 
@@ -852,7 +860,8 @@ public class XanaParser extends Parser {
               {
                 setState(127);
                 ((Function_bodyContext) _localctx).var_definition_list = var_definition_list();
-                _localctx.list.addAll(((Function_bodyContext) _localctx).var_definition_list.list);
+                _localctx.varDefinitionList.addAll(
+                    ((Function_bodyContext) _localctx).var_definition_list.list);
               }
             }
           }
@@ -868,7 +877,7 @@ public class XanaParser extends Parser {
             {
               setState(135);
               ((Function_bodyContext) _localctx).statement = statement();
-              _localctx.list.addAll(((Function_bodyContext) _localctx).statement.list);
+              _localctx.statementList.addAll(((Function_bodyContext) _localctx).statement.list);
             }
           }
           setState(142);
@@ -988,7 +997,7 @@ public class XanaParser extends Parser {
           {
             setState(158);
             ((StatementContext) _localctx).puts_statement = puts_statement();
-            _localctx.list.add(((StatementContext) _localctx).puts_statement.ast);
+            _localctx.list.addAll(((StatementContext) _localctx).puts_statement.list);
           }
           break;
         case 7:
@@ -996,7 +1005,7 @@ public class XanaParser extends Parser {
           {
             setState(161);
             ((StatementContext) _localctx).in_statement = in_statement();
-            _localctx.list.add(((StatementContext) _localctx).in_statement.ast);
+            _localctx.list.addAll(((StatementContext) _localctx).in_statement.list);
           }
           break;
       }
@@ -1304,7 +1313,7 @@ public class XanaParser extends Parser {
 
   @SuppressWarnings("CheckReturnValue")
   public static class Puts_statementContext extends ParserRuleContext {
-    public Write ast;
+    public List<Write> list = new ArrayList<>();
     public Io_listContext io_list;
 
     public Io_listContext io_list() {
@@ -1331,8 +1340,9 @@ public class XanaParser extends Parser {
         match(T__13);
         setState(209);
         ((Puts_statementContext) _localctx).io_list = io_list();
-        ((Puts_statementContext) _localctx).ast =
-            new Write(((Puts_statementContext) _localctx).io_list.list);
+
+        for (Expression e : ((Puts_statementContext) _localctx).io_list.list)
+          _localctx.list.add(new Write(e));
       }
     } catch (RecognitionException re) {
       _localctx.exception = re;
@@ -1346,7 +1356,7 @@ public class XanaParser extends Parser {
 
   @SuppressWarnings("CheckReturnValue")
   public static class In_statementContext extends ParserRuleContext {
-    public Read ast;
+    public List<Read> list = new ArrayList<>();
     public Io_listContext io_list;
 
     public Io_listContext io_list() {
@@ -1373,8 +1383,9 @@ public class XanaParser extends Parser {
         match(T__14);
         setState(213);
         ((In_statementContext) _localctx).io_list = io_list();
-        ((In_statementContext) _localctx).ast =
-            new Read(((In_statementContext) _localctx).io_list.list);
+
+        for (Expression e : ((In_statementContext) _localctx).io_list.list)
+          _localctx.list.add(new Read(e));
       }
     } catch (RecognitionException re) {
       _localctx.exception = re;
@@ -1890,9 +1901,12 @@ public class XanaParser extends Parser {
             new Invocation(
                 ((Function_invocationContext) _localctx).f.getLine(),
                 ((Function_invocationContext) _localctx).f.getCharPositionInLine() + 1,
-                (((Function_invocationContext) _localctx).f != null
-                    ? ((Function_invocationContext) _localctx).f.getText()
-                    : null),
+                new Variable(
+                    ((Function_invocationContext) _localctx).f.getLine(),
+                    ((Function_invocationContext) _localctx).f.getCharPositionInLine() + 1,
+                    (((Function_invocationContext) _localctx).f != null
+                        ? ((Function_invocationContext) _localctx).f.getText()
+                        : null)),
                 ((Function_invocationContext) _localctx).function_invocation_params.list);
       }
     } catch (RecognitionException re) {

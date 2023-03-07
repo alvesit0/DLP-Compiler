@@ -40,13 +40,16 @@ var_definition_list returns [List<VarDefinition> list = new ArrayList<VarDefinit
 
 function_definition returns [FunctionDefinition ast]
             : 'def' f=ID'('params')' '::' t=function_type 'do' function_body 'end'
-                {$ast = new FunctionDefinition($f.getLine(), $f.getCharPositionInLine() + 1, $t.ast, $f.text, $params.list, $function_body.list);}
+                {$ast = new FunctionDefinition($f.getLine(), $f.getCharPositionInLine() + 1,
+                    new FuncType($t.ast.getLine(), $t.ast.getColumn(), $params.list, $t.ast)
+                , $f.text, $function_body.statementList, $function_body.varDefinitionList);}
             ;
 
 main_function returns [FunctionDefinition ast]
             : 'def' m='main' '('params')' 'do' function_body 'end'
                 {$ast = new FunctionDefinition($m.getLine(), $m.getCharPositionInLine() + 1,
-                new VoidType($m.getLine(), $m.getCharPositionInLine() + 1), "main", $params.list, $function_body.list);}
+                    new FuncType($m.getLine(), $m.getCharPositionInLine() + 1, $params.list, new VoidType($m.getLine(), $m.getCharPositionInLine() + 1))
+                , "main", $function_body.statementList, $function_body.varDefinitionList);}
             ;
 
 params returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
@@ -55,11 +58,11 @@ params returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
             |
             ;
 
-function_body returns [List<Statement> list = new ArrayList<>();]
+function_body returns [List<Statement> statementList = new ArrayList<>(), List<VarDefinition> varDefinitionList = new ArrayList<>()]
             : (var_definition_list
-                {$list.addAll($var_definition_list.list);}
+                {$varDefinitionList.addAll($var_definition_list.list);}
               )*(statement
-                {$list.addAll($statement.list);}
+                {$statementList.addAll($statement.list);}
               )*
             ;
 
@@ -72,8 +75,8 @@ statement returns [List<Statement> list = new ArrayList<Statement>();]
             | assignment_statement {$list.add($assignment_statement.ast);}
             | function_invocation {$list.add($function_invocation.ast);}
             | return_statement {$list.add($return_statement.ast);}
-            | puts_statement {$list.add($puts_statement.ast);}
-            | in_statement {$list.add($in_statement.ast);}
+            | puts_statement {$list.addAll($puts_statement.list);}
+            | in_statement {$list.addAll($in_statement.list);}
             ;
 
 statement_list returns [List<Statement> list = new ArrayList<Statement>();]
@@ -97,12 +100,18 @@ return_statement returns [Return ast]
             : 'return' expression {$ast = new Return($expression.ast);}
             ;
 
-puts_statement returns [Write ast]
-            : 'puts' io_list {$ast = new Write($io_list.list);}
+puts_statement returns [List<Write> list = new ArrayList<>()]
+            : 'puts' io_list {
+                for (Expression e : $io_list.list)
+                    $list.add(new Write(e));
+                }
             ;
 
-in_statement returns [Read ast]
-            : 'in' io_list {$ast = new Read($io_list.list);}
+in_statement returns [List<Read> list = new ArrayList<>()]
+            : 'in' io_list {
+                for (Expression e : $io_list.list)
+                    $list.add(new Read(e));
+                }
             ;
 
 io_list returns [List<Expression> list = new ArrayList<Expression>();]
@@ -135,7 +144,7 @@ expression returns [Expression ast]
             ;
 
 function_invocation returns [Invocation ast]
-            : f=ID'('function_invocation_params')' {$ast = new Invocation($f.getLine(), $f.getCharPositionInLine() + 1, $f.text, $function_invocation_params.list);}
+            : f=ID'('function_invocation_params')' {$ast = new Invocation($f.getLine(), $f.getCharPositionInLine() + 1, new Variable($f.getLine(), $f.getCharPositionInLine() + 1, $f.text), $function_invocation_params.list);}
             ;
 
 function_invocation_params returns [List<Expression> list = new ArrayList<Expression>()]
