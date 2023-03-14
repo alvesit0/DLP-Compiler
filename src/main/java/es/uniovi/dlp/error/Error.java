@@ -20,4 +20,6 @@ public record Error(Location location, ErrorReason reason, String extraMessage) 
                 + ". Cause of the error: " + reason.getMessage() + ". "
                 + extraMessage;
     }
+
+    // a
 }
