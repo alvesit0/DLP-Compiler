@@ -283,7 +283,7 @@ public class XanaParser extends Parser {
 
   @SuppressWarnings("CheckReturnValue")
   public static class ProgramContext extends ParserRuleContext {
-    public Program ast;
+    public es.uniovi.dlp.ast.Program ast;
     public Definition_listContext definition_list;
 
     public Definition_listContext definition_list() {
@@ -309,7 +309,7 @@ public class XanaParser extends Parser {
         setState(50);
         ((ProgramContext) _localctx).definition_list = definition_list();
         ((ProgramContext) _localctx).ast =
-            new Program(0, 0, ((ProgramContext) _localctx).definition_list.list);
+            new es.uniovi.dlp.ast.Program(0, 0, ((ProgramContext) _localctx).definition_list.list);
       }
     } catch (RecognitionException re) {
       _localctx.exception = re;
@@ -2231,7 +2231,11 @@ public class XanaParser extends Parser {
 
         for (var id : ((Struct_fieldContext) _localctx).ids) {
           _localctx.list.add(
-              new StructField(id.getText(), ((Struct_fieldContext) _localctx).type.ast));
+              new StructField(
+                  id.getLine(),
+                  id.getCharPositionInLine() + 1,
+                  id.getText(),
+                  ((Struct_fieldContext) _localctx).type.ast));
         }
       }
     } catch (RecognitionException re) {

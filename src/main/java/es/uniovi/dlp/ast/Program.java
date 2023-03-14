@@ -1,6 +1,7 @@
-package es.uniovi.dlp.ast.program;
+package es.uniovi.dlp.ast;
 
-import es.uniovi.dlp.ast.ASTNode;
+import es.uniovi.dlp.ast.program.Definition;
+import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.util.List;
 
 public class Program implements ASTNode {
@@ -31,7 +32,17 @@ public class Program implements ASTNode {
   }
 
   @Override
+  public <ReturnType, ParamType> ReturnType accept(
+      AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
+    return null;
+  }
+
+  @Override
   public String toString() {
     return "Line: " + line + "\nColumn: " + column;
+  }
+
+  public List<Definition> getDefinitions() {
+    return definitionList;
   }
 }

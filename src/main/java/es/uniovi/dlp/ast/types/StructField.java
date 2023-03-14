@@ -1,20 +1,17 @@
 package es.uniovi.dlp.ast.types;
 
-public class StructField {
+import es.uniovi.dlp.ast.program.AbstractDefinition;
+
+public class StructField extends AbstractDefinition {
 
   private String name;
-  private Type type;
 
-  public StructField(String name, Type type) {
+  public StructField(int line, int column, String name, Type type) {
+    super(line, column, type);
     this.name = name;
-    this.type = type;
   }
 
   public String getName() {
     return name;
-  }
-
-  public Type getType() {
-    return type;
   }
 }

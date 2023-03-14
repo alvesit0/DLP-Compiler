@@ -10,8 +10,8 @@ import es.uniovi.dlp.ast.types.*;
 import es.uniovi.dlp.ast.*;
 }
 
-program returns [Program ast]
-            : definition_list {$ast = new Program(0, 0, $definition_list.list);}
+program returns [es.uniovi.dlp.ast.Program ast]
+            : definition_list {$ast = new es.uniovi.dlp.ast.Program(0, 0, $definition_list.list);}
             ;
 
 
@@ -169,7 +169,7 @@ struct_field returns [List<StructField> list = new ArrayList<StructField>();]
             : ids+=ID (','ids+=ID)* '::' t=type
                 {
                     for (var id : $ids) {
-                        $list.add(new StructField(id.getText(), $type.ast));
+                        $list.add(new StructField(id.getLine(), id.getCharPositionInLine() + 1, id.getText(), $type.ast));
                     }
                 }
             ;

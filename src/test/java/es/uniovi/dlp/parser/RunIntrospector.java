@@ -1,6 +1,6 @@
 package es.uniovi.dlp.parser;
 
-import es.uniovi.dlp.ast.program.Program;
+import es.uniovi.dlp.ast.Program;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorTree;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class RunIntrospector {
 
     Program ast = parser.program().ast;
 
-    IntrospectorModel model = new IntrospectorModel("Program", ast);
+    IntrospectorModel model = new IntrospectorModel("es.uniovi.dlp.ast.Program", ast);
     new IntrospectorTree("Introspector", model);
   }
 }

@@ -5,26 +5,26 @@ import java.util.Collections;
 import java.util.List;
 
 public class ErrorManager {
-    private static final ErrorManager instance = new ErrorManager();
+  private static final ErrorManager instance = new ErrorManager();
 
-    private final List<Error> errors = new ArrayList<>();
+  private final List<Error> errors = new ArrayList<>();
 
-    private ErrorManager() {}
+  private ErrorManager() {}
 
-    public static ErrorManager getInstance() {
-        return instance;
-    }
+  public static ErrorManager getInstance() {
+    return instance;
+  }
 
-    public void clearErrors() {
-        errors.clear();
-    }
+  public void clearErrors() {
+    errors.clear();
+  }
 
+  public List<Error> getErrors() {
+    Collections.sort(errors);
+    return errors;
+  }
 
-    public List<Error> getErrors() {
-        return new ArrayList<>();
-    }
-
-    public boolean hasErrors() {
-        return false;
-    }
+  public boolean hasErrors() {
+    return errors.size() > 0;
+  }
 }
