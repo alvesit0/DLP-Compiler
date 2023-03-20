@@ -24,6 +24,14 @@ public class Assignment implements Statement {
         + '}';
   }
 
+  public Expression getLeftExpression() {
+    return leftExpression;
+  }
+
+  public Expression getRightExpression() {
+    return rightExpression;
+  }
+
   @Override
   public int getLine() {
     return 0;
@@ -37,6 +45,6 @@ public class Assignment implements Statement {
   @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
-    return null; // TODO
+    return visitor.visit(this, param);
   }
 }

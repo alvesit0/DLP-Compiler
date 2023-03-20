@@ -2,6 +2,7 @@ package es.uniovi.dlp.ast.program;
 
 import es.uniovi.dlp.ast.statements.Statement;
 import es.uniovi.dlp.ast.types.FuncType;
+import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.util.List;
 
 public class FunctionDefinition extends AbstractDefinition {
@@ -47,5 +48,11 @@ public class FunctionDefinition extends AbstractDefinition {
         + "\nName: "
         + getName()
         + "\n\n";
+  }
+
+  @Override
+  public <ReturnType, ParamType> ReturnType accept(
+      AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
+    return visitor.visit(this, param);
   }
 }

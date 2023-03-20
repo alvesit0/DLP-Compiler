@@ -1,6 +1,7 @@
 package es.uniovi.dlp.ast.types;
 
 import es.uniovi.dlp.ast.program.VarDefinition;
+import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.util.List;
 
 public class FuncType extends AbstractType {
@@ -20,5 +21,11 @@ public class FuncType extends AbstractType {
 
   public Type getReturnType() {
     return returnType;
+  }
+
+  @Override
+  public <ReturnType, ParamType> ReturnType accept(
+      AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
+    return visitor.visit(this, param);
   }
 }

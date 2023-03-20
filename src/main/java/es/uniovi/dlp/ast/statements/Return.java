@@ -31,6 +31,6 @@ public class Return implements Statement {
   @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
-    return null; // TODO
+    return visitor.visit(this, param);
   }
 }

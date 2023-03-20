@@ -1,5 +1,6 @@
 package es.uniovi.dlp.ast.expressions;
 
+import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.util.List;
 
 public class ArrayAccess extends AbstractExpression {
@@ -18,5 +19,11 @@ public class ArrayAccess extends AbstractExpression {
 
   public List<Expression> getParams() {
     return params;
+  }
+
+  @Override
+  public <ReturnType, ParamType> ReturnType accept(
+      AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
+    return visitor.visit(this, param);
   }
 }
