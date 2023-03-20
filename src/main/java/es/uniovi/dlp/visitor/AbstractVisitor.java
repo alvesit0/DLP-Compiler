@@ -131,7 +131,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   }
 
   public ReturnType visit(Return returnStatement, ParamType param) {
-    returnStatement.accept(this, param);
+    returnStatement.getReturnValue().accept(this, param);
 
     return null;
   }

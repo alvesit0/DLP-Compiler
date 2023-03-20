@@ -1,15 +1,82 @@
 package es.uniovi.dlp.visitor.semantic;
 
-import es.uniovi.dlp.ast.expressions.Variable;
+import es.uniovi.dlp.ast.expressions.*;
+import es.uniovi.dlp.ast.statements.Assignment;
+import es.uniovi.dlp.ast.statements.Read;
 import es.uniovi.dlp.ast.types.DoubleType;
 import es.uniovi.dlp.ast.types.StructField;
 import es.uniovi.dlp.ast.types.Type;
+import es.uniovi.dlp.error.Error;
+import es.uniovi.dlp.error.ErrorManager;
+import es.uniovi.dlp.error.ErrorReason;
+import es.uniovi.dlp.error.Location;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
+  public Type visit(Assignment assignment, Type param) {
+    assignment.getLeftExpression().accept(this, param);
+    assignment.getRightExpression().accept(this, param);
+
+    if (!assignment.getLeftExpression().getLValue())
+      ErrorManager.getInstance()
+          .getErrors()
+          .add(
+              new Error(
+                  new Location(
+                      assignment.getLeftExpression().getLine(),
+                      assignment.getLeftExpression().getColumn() - 2),
+                  ErrorReason.LVALUE_REQUIRED));
+
+    return null;
+  }
+
+  @Override
+  public Type visit(Read read, Type param) {
+    read.getExpression().accept(this, param);
+
+    if (!read.getExpression().getLValue())
+      ErrorManager.getInstance()
+          .getErrors()
+          .add(
+              new Error(
+                  new Location(
+                      read.getExpression().getLine(), read.getExpression().getColumn() - 2),
+                  ErrorReason.LVALUE_REQUIRED));
+
+    return null;
+  }
+
+  @Override
+  public Type visit(Cast cast, Type param) {
+    cast.setLValue(false);
+    return null;
+  }
+
+  @Override
+  public Type visit(ArithmeticOperation arithmeticOperation, Type param) {
+    arithmeticOperation.getLeftExpression().accept(this, param);
+    arithmeticOperation.getRightExpression().accept(this, param);
+    arithmeticOperation.setLValue(false);
+    return null;
+  }
+
+  @Override
   public Type visit(Variable variable, Type param) {
+    variable.setLValue(true);
+    return null;
+  }
+
+  @Override
+  public Type visit(StructAccess structAccess, Type param) {
+    structAccess.setLValue(true);
+    return null;
+  }
+
+  @Override
+  public Type visit(ArrayAccess arrayAccess, Type param) {
+    arrayAccess.setLValue(true);
     return null;
   }
 
