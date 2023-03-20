@@ -4,6 +4,7 @@ import es.uniovi.dlp.error.Error;
 import es.uniovi.dlp.error.ErrorManager;
 import es.uniovi.dlp.error.ErrorReason;
 import es.uniovi.dlp.error.Location;
+import java.util.HashSet;
 import java.util.List;
 
 public class Struct extends AbstractType {
@@ -12,17 +13,14 @@ public class Struct extends AbstractType {
 
   public Struct(int line, int column, List<StructField> fields) {
     super(line, column);
-    for (StructField s1 : fields)
-      for (StructField s2 : fields)
-        if (s2.getName().equals(s1.getName())) {
-          ErrorManager.getInstance()
-              .getErrors()
-              .add(
-                  new Error(
-                      new Location(s2.getLine(), s2.getColumn()),
-                      ErrorReason.FIELD_ALREADY_DECLARED));
-          return;
-        }
+    HashSet<String> set = new HashSet<String>();
+    for (StructField s : fields)
+      if (!set.add(s.getName()))
+        ErrorManager.getInstance()
+            .getErrors()
+            .add(
+                new Error(
+                    new Location(s.getLine(), s.getColumn()), ErrorReason.FIELD_ALREADY_DECLARED));
     this.fields = fields;
   }
 
