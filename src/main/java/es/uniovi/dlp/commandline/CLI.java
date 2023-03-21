@@ -38,8 +38,7 @@ public class CLI {
     try {
       Compiler compiler = new Compiler(file);
       compiler.run();
-      IntrospectorModel model =
-          new IntrospectorModel("es.uniovi.dlp.ast.Program", compiler.getProgram());
+      IntrospectorModel model = new IntrospectorModel("Program", compiler.getProgram());
       new IntrospectorTree("Introspector", model);
     } catch (Exception e) {
       System.err.println("Failed to run the program:");
