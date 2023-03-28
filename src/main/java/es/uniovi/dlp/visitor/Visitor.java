@@ -1,9 +1,9 @@
 package es.uniovi.dlp.visitor;
 
 import es.uniovi.dlp.ast.Program;
+import es.uniovi.dlp.ast.definitions.FunctionDefinition;
+import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.*;
-import es.uniovi.dlp.ast.program.FunctionDefinition;
-import es.uniovi.dlp.ast.program.VarDefinition;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.*;
 

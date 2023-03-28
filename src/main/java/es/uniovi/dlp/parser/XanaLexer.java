@@ -3,8 +3,8 @@
 package es.uniovi.dlp.parser;
 
 import es.uniovi.dlp.ast.*;
+import es.uniovi.dlp.ast.definitions.*;
 import es.uniovi.dlp.ast.expressions.*;
-import es.uniovi.dlp.ast.program.*;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.*;
 import org.antlr.v4.runtime.*;

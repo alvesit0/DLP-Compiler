@@ -1,19 +1,34 @@
 package es.uniovi.dlp.ast.types;
 
-import es.uniovi.dlp.ast.program.AbstractDefinition;
+import es.uniovi.dlp.ast.ASTNode;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
-public class StructField extends AbstractDefinition {
+public class StructField implements ASTNode {
 
+  private int line;
+  private int column;
   private String name;
+  private Type type;
 
   public StructField(int line, int column, String name, Type type) {
-    super(line, column, type);
+    this.line = line;
+    this.column = column;
     this.name = name;
+    this.type = type;
   }
 
   public String getName() {
     return name;
+  }
+
+  @Override
+  public int getLine() {
+    return this.line;
+  }
+
+  @Override
+  public int getColumn() {
+    return this.column;
   }
 
   @Override

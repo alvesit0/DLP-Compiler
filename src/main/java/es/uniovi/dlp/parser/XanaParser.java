@@ -3,8 +3,8 @@
 package es.uniovi.dlp.parser;
 
 import es.uniovi.dlp.ast.*;
+import es.uniovi.dlp.ast.definitions.*;
 import es.uniovi.dlp.ast.expressions.*;
-import es.uniovi.dlp.ast.program.*;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.*;
 import java.util.ArrayList;
@@ -531,8 +531,8 @@ public class XanaParser extends Parser {
               new VarDefinition(
                   id.getLine(),
                   id.getCharPositionInLine() + 1,
-                  ((Var_definition_listContext) _localctx).type.ast,
-                  id.getText()));
+                  id.getText(),
+                  ((Var_definition_listContext) _localctx).type.ast));
         }
       }
     } catch (RecognitionException re) {
@@ -758,10 +758,10 @@ public class XanaParser extends Parser {
                 new VarDefinition(
                     ((ParamsContext) _localctx).var1.getLine(),
                     ((ParamsContext) _localctx).var1.getCharPositionInLine() + 1,
-                    ((ParamsContext) _localctx).t1.ast,
                     (((ParamsContext) _localctx).var1 != null
                         ? ((ParamsContext) _localctx).var1.getText()
-                        : null)));
+                        : null),
+                    ((ParamsContext) _localctx).t1.ast));
             setState(121);
             _errHandler.sync(this);
             _la = _input.LA(1);
@@ -780,10 +780,10 @@ public class XanaParser extends Parser {
                       new VarDefinition(
                           ((ParamsContext) _localctx).var2.getLine(),
                           ((ParamsContext) _localctx).var2.getCharPositionInLine() + 1,
-                          ((ParamsContext) _localctx).t2.ast,
                           (((ParamsContext) _localctx).var2 != null
                               ? ((ParamsContext) _localctx).var2.getText()
-                              : null)));
+                              : null),
+                          ((ParamsContext) _localctx).t2.ast));
                 }
               }
               setState(123);

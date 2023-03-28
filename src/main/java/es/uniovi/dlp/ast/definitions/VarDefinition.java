@@ -1,4 +1,4 @@
-package es.uniovi.dlp.ast.program;
+package es.uniovi.dlp.ast.definitions;
 
 import es.uniovi.dlp.ast.statements.Statement;
 import es.uniovi.dlp.ast.types.Type;
@@ -6,15 +6,8 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class VarDefinition extends AbstractDefinition implements Statement {
 
-  private String name;
-
-  public VarDefinition(int line, int column, Type type, String name) {
-    super(line, column, type);
-    this.name = name;
-  }
-
-  public String getName() {
-    return name;
+  public VarDefinition(int line, int column, String name, Type type) {
+    super(line, column, name, type);
   }
 
   @Override

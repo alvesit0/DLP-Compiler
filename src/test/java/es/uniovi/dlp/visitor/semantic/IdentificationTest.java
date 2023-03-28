@@ -6,6 +6,8 @@ import static es.uniovi.dlp.TestHelpers.runCompiler;
 import es.uniovi.dlp.error.Error;
 import es.uniovi.dlp.error.ErrorReason;
 import java.util.Arrays;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class IdentificationTest {

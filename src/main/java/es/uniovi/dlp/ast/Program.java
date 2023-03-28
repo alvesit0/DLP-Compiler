@@ -1,6 +1,6 @@
 package es.uniovi.dlp.ast;
 
-import es.uniovi.dlp.ast.program.Definition;
+import es.uniovi.dlp.ast.definitions.Definition;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.util.List;
 

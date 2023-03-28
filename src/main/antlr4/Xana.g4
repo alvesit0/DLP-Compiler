@@ -5,7 +5,7 @@ package es.uniovi.dlp.parser;
 
 import es.uniovi.dlp.ast.expressions.*;
 import es.uniovi.dlp.ast.statements.*;
-import es.uniovi.dlp.ast.program.*;
+import es.uniovi.dlp.ast.definitions.*;
 import es.uniovi.dlp.ast.types.*;
 import es.uniovi.dlp.ast.*;
 }
@@ -33,7 +33,7 @@ definition returns [List<Definition> list = new ArrayList<Definition>();]
 var_definition_list returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
             : ids+=ID (','ids+=ID)* '::' t=type {
                 for (var id : $ids) {
-                    $list.add(new VarDefinition(id.getLine(), id.getCharPositionInLine() + 1, $type.ast, id.getText()));
+                    $list.add(new VarDefinition(id.getLine(), id.getCharPositionInLine() + 1, id.getText(), $type.ast));
                 }
             }
             ;
@@ -53,8 +53,8 @@ main_function returns [FunctionDefinition ast]
             ;
 
 params returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
-            : var1=ID '::' t1=type {$list.add(new VarDefinition($var1.getLine(), $var1.getCharPositionInLine() + 1, $t1.ast, $var1.text));}
-                (',' var2=ID '::' t2=type {$list.add(new VarDefinition($var2.getLine(), $var2.getCharPositionInLine() + 1, $t2.ast, $var2.text));})*
+            : var1=ID '::' t1=type {$list.add(new VarDefinition($var1.getLine(), $var1.getCharPositionInLine() + 1, $var1.text, $t1.ast));}
+                (',' var2=ID '::' t2=type {$list.add(new VarDefinition($var2.getLine(), $var2.getCharPositionInLine() + 1, $var2.text, $t2.ast));})*
             |
             ;
 

@@ -1,6 +1,6 @@
 package es.uniovi.dlp.ast.expressions;
 
-import es.uniovi.dlp.ast.program.Definition;
+import es.uniovi.dlp.ast.definitions.Definition;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class Variable extends AbstractExpression {
@@ -14,6 +14,10 @@ public class Variable extends AbstractExpression {
 
   public String getName() {
     return name;
+  }
+
+  public void setDefinition(Definition definition) {
+    this.definition = definition;
   }
 
   @Override

@@ -1,4 +1,4 @@
-package es.uniovi.dlp.ast.program;
+package es.uniovi.dlp.ast.definitions;
 
 import es.uniovi.dlp.ast.statements.Statement;
 import es.uniovi.dlp.ast.types.FuncType;
@@ -7,7 +7,6 @@ import java.util.List;
 
 public class FunctionDefinition extends AbstractDefinition {
 
-  private String name;
   private List<Statement> statements;
   private List<VarDefinition> varDefinitions;
 
@@ -18,14 +17,9 @@ public class FunctionDefinition extends AbstractDefinition {
       String name,
       List<Statement> statements,
       List<VarDefinition> varDefinitions) {
-    super(line, column, funcType);
-    this.name = name;
+    super(line, column, name, funcType);
     this.statements = statements;
     this.varDefinitions = varDefinitions;
-  }
-
-  public String getName() {
-    return name;
   }
 
   public List<Statement> getStatements() {
