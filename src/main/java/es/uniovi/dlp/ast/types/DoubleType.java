@@ -4,6 +4,12 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class DoubleType extends AbstractType {
 
+  private static final DoubleType instance = new DoubleType(0,0);
+
+  public static Type getInstance() {
+    return instance;
+  }
+
   public DoubleType(int line, int column) {
     super(line, column);
   }

@@ -4,6 +4,7 @@ import es.uniovi.dlp.ast.expressions.*;
 import es.uniovi.dlp.ast.statements.Assignment;
 import es.uniovi.dlp.ast.statements.Read;
 import es.uniovi.dlp.ast.types.DoubleType;
+import es.uniovi.dlp.ast.types.ErrorType;
 import es.uniovi.dlp.ast.types.StructField;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.error.Error;
@@ -56,8 +57,22 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(ArithmeticOperation arithmeticOperation, Type param) {
-    arithmeticOperation.getLeftExpression().accept(this, param);
-    arithmeticOperation.getRightExpression().accept(this, param);
+    super.visit(arithmeticOperation, param);
+
+    Type leftType = arithmeticOperation.getLeftExpression().getType();
+    Type rightType = arithmeticOperation.getRightExpression().getType();
+
+    arithmeticOperation.setType(leftType.arithmetic(rightType));
+
+    if (arithmeticOperation.getType() == null) {
+      arithmeticOperation.setType(ErrorType.getInstance());
+      ErrorManager.getInstance().getErrors().add(
+              new Error(
+                      new Location(
+                              arithmeticOperation.getLine(), arithmeticOperation.getColumn()),
+                      ErrorReason.INVALID_ARITHMETIC));
+    }
+
     arithmeticOperation.setLValue(false);
     return null;
   }

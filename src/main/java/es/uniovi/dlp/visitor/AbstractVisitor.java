@@ -220,4 +220,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
     return null;
   }
 
+  public ReturnType visit(ErrorType errorType, ParamType param) {
+    return null;
+  }
 }

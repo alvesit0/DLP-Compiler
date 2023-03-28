@@ -1,5 +1,6 @@
 package es.uniovi.dlp.ast.expressions;
 
+import es.uniovi.dlp.ast.types.IntType;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class IntLiteral extends AbstractExpression {
@@ -8,6 +9,7 @@ public class IntLiteral extends AbstractExpression {
   public IntLiteral(int line, int column, int value) {
     super(line, column);
     this.value = value;
+    setType(IntType.getInstance());
   }
 
   public int getValue() {

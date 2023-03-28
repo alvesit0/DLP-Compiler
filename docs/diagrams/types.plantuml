@@ -19,12 +19,16 @@ class IntType
 class DoubleType
 class CharType
 
+' Tipo error
+class ErrorType
+
 Type <|.. IntType
 Type <|.. DoubleType
 Type <|.. CharType
 Type <|.. ArrayType
 Type <|.. StructType
 Type <|.. FuncType
+Type <|.. ErrorType
 
 ' Tipos complejos
 class ArrayType {
