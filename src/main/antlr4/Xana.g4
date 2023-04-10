@@ -40,7 +40,7 @@ var_definition_list returns [List<VarDefinition> list = new ArrayList<VarDefinit
 
 function_definition returns [FunctionDefinition ast]
             : 'def' f=ID'('params')' '::' t=function_type 'do' function_body 'end'
-                {$ast = new FunctionDefinition($f.getLine(), $f.getCharPositionInLine() + 1,
+                {$ast = new FunctionDefinition($f.getLine(), 1,
                     new FuncType($t.ast.getLine(), $t.ast.getColumn(), $params.list, $t.ast)
                 , $f.text, $function_body.statementList, $function_body.varDefinitionList);}
             ;

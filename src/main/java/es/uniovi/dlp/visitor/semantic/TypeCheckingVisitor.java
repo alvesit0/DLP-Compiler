@@ -28,7 +28,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
                   new Location(
                       assignment.getLeftExpression().getLine(),
                       assignment.getLeftExpression().getColumn() - 2),
-                  ErrorReason.LVALUE_REQUIRED));
+                  ErrorReason.LVALUE_REQUIRED)) ;
 
     return null;
   }
@@ -66,11 +66,12 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
     if (arithmeticOperation.getType() == null) {
       arithmeticOperation.setType(ErrorType.getInstance());
-      ErrorManager.getInstance().getErrors().add(
+      ErrorManager.getInstance()
+          .getErrors()
+          .add(
               new Error(
-                      new Location(
-                              arithmeticOperation.getLine(), arithmeticOperation.getColumn()),
-                      ErrorReason.INVALID_ARITHMETIC));
+                  new Location(arithmeticOperation.getLine(), arithmeticOperation.getColumn()),
+                  ErrorReason.INVALID_ARITHMETIC));
     }
 
     arithmeticOperation.setLValue(false);

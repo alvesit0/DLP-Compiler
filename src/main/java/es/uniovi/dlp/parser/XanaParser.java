@@ -608,7 +608,7 @@ public class XanaParser extends Parser {
         ((Function_definitionContext) _localctx).ast =
             new FunctionDefinition(
                 ((Function_definitionContext) _localctx).f.getLine(),
-                ((Function_definitionContext) _localctx).f.getCharPositionInLine() + 1,
+                1,
                 new FuncType(
                     ((Function_definitionContext) _localctx).t.ast.getLine(),
                     ((Function_definitionContext) _localctx).t.ast.getColumn(),

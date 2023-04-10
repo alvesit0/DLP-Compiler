@@ -102,6 +102,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   public ReturnType visit(FunctionDefinition functionDefinition, ParamType param) {
     functionDefinition.getType().accept(this, param);
     functionDefinition.getStatements().forEach(st -> st.accept(this, param));
+    functionDefinition.getVarDefinitions().forEach(st -> st.accept(this, param));
 
     return null;
   }

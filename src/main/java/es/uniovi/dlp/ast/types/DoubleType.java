@@ -4,7 +4,7 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class DoubleType extends AbstractType {
 
-  private static final DoubleType instance = new DoubleType(0,0);
+  private static final DoubleType instance = new DoubleType(0, 0);
 
   public static Type getInstance() {
     return instance;

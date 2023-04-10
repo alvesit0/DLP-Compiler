@@ -27,4 +27,8 @@ public class ErrorManager {
   public boolean hasErrors() {
     return errors.size() > 0;
   }
+
+  public void addError(int line, int column, ErrorReason reason) {
+    errors.add(new Error(new Location(line, column), reason));
+  }
 }
