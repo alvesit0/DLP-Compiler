@@ -28,7 +28,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
                   new Location(
                       assignment.getLeftExpression().getLine(),
                       assignment.getLeftExpression().getColumn() - 2),
-                  ErrorReason.LVALUE_REQUIRED)) ;
+                  ErrorReason.LVALUE_REQUIRED));
 
     return null;
   }
@@ -50,12 +50,6 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(Cast cast, Type param) {
-    cast.setLValue(false);
-    return null;
-  }
-
-  @Override
   public Type visit(ArithmeticOperation arithmeticOperation, Type param) {
     super.visit(arithmeticOperation, param);
 
@@ -66,15 +60,44 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
     if (arithmeticOperation.getType() == null) {
       arithmeticOperation.setType(ErrorType.getInstance());
-      ErrorManager.getInstance()
-          .getErrors()
-          .add(
-              new Error(
-                  new Location(arithmeticOperation.getLine(), arithmeticOperation.getColumn()),
-                  ErrorReason.INVALID_ARITHMETIC));
+      ErrorManager.getInstance().addError(arithmeticOperation.getLine(), arithmeticOperation.getColumn(),
+              ErrorReason.INVALID_ARITHMETIC);
     }
 
     arithmeticOperation.setLValue(false);
+    return null;
+  }
+
+  public Type visit(Negative negative, Type param) {
+    super.visit(negative, param);
+
+    if (negative.getType() == null) {
+      negative.setType(ErrorType.getInstance());
+      ErrorManager.getInstance().addError(negative.getLine(), negative.getColumn(),
+              ErrorReason.INVALID_ARITHMETIC);
+    }
+
+    negative.setLValue(false);
+
+    return null;
+  }
+
+  @Override
+  public Type visit(Cast cast, Type param) {
+    super.visit(cast, param);
+
+    Type leftType = cast.getLeftExpression().getType();
+    Type rightType = cast.getType();
+
+    cast.setType(rightType.cast(leftType));
+
+    if (cast.getType() == null) {
+      cast.setType(ErrorType.getInstance());
+      ErrorManager.getInstance().addError(cast.getLine(), cast.getColumn(),
+              ErrorReason.INVALID_CAST);
+    }
+
+    cast.setLValue(false);
     return null;
   }
 

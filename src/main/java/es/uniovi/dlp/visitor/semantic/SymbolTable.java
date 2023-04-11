@@ -38,8 +38,7 @@ public class SymbolTable {
   public Definition find(String id) {
     int currentScope = scope;
     while (currentScope >= 0) {
-      if (table.get(currentScope).containsKey(id))
-        return table.get(currentScope).get(id);
+      if (table.get(currentScope).containsKey(id)) return table.get(currentScope).get(id);
       currentScope--;
     }
     return null;

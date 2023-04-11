@@ -35,4 +35,17 @@ public class IntType extends AbstractType {
     }
     return super.arithmetic(type);
   }
+
+  @Override
+  public Type negative() {
+    return this;
+  }
+
+  @Override
+  public Type cast(Type from) {
+    if (from instanceof IntType) return from;
+    else if (from instanceof CharType) return from;
+    else if (from instanceof DoubleType) return from;
+    else return super.cast(from);
+  }
 }

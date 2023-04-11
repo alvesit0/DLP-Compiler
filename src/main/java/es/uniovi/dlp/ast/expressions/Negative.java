@@ -8,6 +8,7 @@ public class Negative extends AbstractExpression {
   public Negative(int line, int column, Expression expression) {
     super(line, column);
     this.expression = expression;
+    setType(expression.getType());
   }
 
   public Expression getExpression() {

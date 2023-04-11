@@ -20,6 +20,30 @@ public class DoubleType extends AbstractType {
   }
 
   @Override
+  public Type arithmetic(Type type) {
+    if (type instanceof CharType || type instanceof IntType) {
+      return this;
+    }
+    if (type instanceof DoubleType) {
+      return DoubleType.getInstance();
+    }
+    return super.arithmetic(type);
+  }
+
+  @Override
+  public Type negative() {
+    return this;
+  }
+
+  @Override
+  public Type cast(Type from) {
+    if (from instanceof IntType) return from;
+    else if (from instanceof CharType) return from;
+    else if (from instanceof DoubleType) return from;
+    else return super.cast(from);
+  }
+
+  @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
     return visitor.visit(this, param);

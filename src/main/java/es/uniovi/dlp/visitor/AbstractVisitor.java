@@ -101,8 +101,8 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   @Override
   public ReturnType visit(FunctionDefinition functionDefinition, ParamType param) {
     functionDefinition.getType().accept(this, param);
-    functionDefinition.getStatements().forEach(st -> st.accept(this, param));
     functionDefinition.getVarDefinitions().forEach(st -> st.accept(this, param));
+    functionDefinition.getStatements().forEach(st -> st.accept(this, param));
 
     return null;
   }
@@ -218,6 +218,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
 
   @Override
   public ReturnType visit(StructField structField, ParamType param) {
+    structField.accept(this, param);
     return null;
   }
 

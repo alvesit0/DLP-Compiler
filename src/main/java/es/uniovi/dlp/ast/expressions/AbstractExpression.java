@@ -26,6 +26,7 @@ public abstract class AbstractExpression extends AbstractASTNode implements Expr
     this.lValue = lValue;
   }
 
+  @Override
   public void setType(Type type) {
     this.type = type;
   }

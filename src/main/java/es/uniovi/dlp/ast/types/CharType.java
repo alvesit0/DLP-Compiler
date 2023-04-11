@@ -24,4 +24,17 @@ public class CharType extends AbstractType {
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
     return visitor.visit(this, param);
   }
+
+  @Override
+  public Type negative() {
+    return this;
+  }
+
+  @Override
+  public Type cast(Type from) {
+    if (from instanceof IntType) return from;
+    else if (from instanceof CharType) return from;
+    else if (from instanceof DoubleType) return from;
+    else return super.cast(from);
+  }
 }

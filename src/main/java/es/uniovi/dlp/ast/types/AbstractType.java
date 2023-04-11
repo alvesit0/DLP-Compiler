@@ -12,4 +12,14 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   public Type arithmetic(Type type) {
     return null;
   }
+
+  @Override
+  public Type cast(Type type) {
+    return null;
+  }
+
+  @Override
+  public Type negative() {
+    return null;
+  }
 }

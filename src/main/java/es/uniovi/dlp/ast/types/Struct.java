@@ -27,6 +27,16 @@ public class Struct extends AbstractType {
   }
 
   @Override
+  public Type negative() {
+    return super.negative();
+  }
+
+  @Override
+  public Type cast(Type from) {
+    return super.cast(from);
+  }
+
+  @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
     return visitor.visit(this, param);
