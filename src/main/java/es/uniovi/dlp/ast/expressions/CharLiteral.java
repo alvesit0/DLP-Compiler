@@ -9,7 +9,7 @@ public class CharLiteral extends AbstractExpression {
   public CharLiteral(int line, int column, char value) {
     super(line, column);
     this.value = value;
-    setType(CharType.getInstance());
+    setType(new CharType(getLine(), getColumn()));
   }
 
   public char getValue() {

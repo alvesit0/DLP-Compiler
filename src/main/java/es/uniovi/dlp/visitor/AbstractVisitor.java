@@ -124,8 +124,8 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
 
   @Override
   public ReturnType visit(Assignment assignment, ParamType param) {
-    assignment.getLeftExpression().accept(this, param);
     assignment.getRightExpression().accept(this, param);
+    assignment.getLeftExpression().accept(this, param);
 
     return null;
   }

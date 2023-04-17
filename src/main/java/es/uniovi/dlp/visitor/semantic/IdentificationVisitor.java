@@ -35,9 +35,8 @@ public class IdentificationVisitor extends AbstractVisitor<Type, Type> {
               functionDefinition.getLine(),
               functionDefinition.getColumn(),
               ErrorReason.FUNCTION_ALREADY_DECLARED);
-    functionDefinition.getVarDefinitions().forEach(((varDef) -> {
+    functionDefinition.getVarDefinitions().forEach(((varDef) -> {}));
 
-    }));
     symbolTable.set();
     super.visit(functionDefinition, param);
     symbolTable.reset();

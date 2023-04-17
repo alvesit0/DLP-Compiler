@@ -9,7 +9,7 @@ public class DoubleLiteral extends AbstractExpression {
   public DoubleLiteral(int line, int column, Double value) {
     super(line, column);
     this.value = value;
-    setType(DoubleType.getInstance());
+    setType(new DoubleType(getLine(), getColumn()));
   }
 
   public double getValue() {

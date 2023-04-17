@@ -22,4 +22,14 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   public Type negative() {
     return null;
   }
+
+  @Override
+  public Type assign(Type type) {
+    return null;
+  }
+
+  @Override
+  public Type indexing(Type type) {
+    return null;
+  }
 }

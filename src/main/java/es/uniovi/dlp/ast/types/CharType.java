@@ -4,12 +4,6 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class CharType extends AbstractType {
 
-  private static final CharType instance = new CharType(0, 0);
-
-  public static Type getInstance() {
-    return instance;
-  }
-
   public CharType(int line, int column) {
     super(line, column);
   }
@@ -36,5 +30,24 @@ public class CharType extends AbstractType {
     else if (from instanceof CharType) return from;
     else if (from instanceof DoubleType) return from;
     else return super.cast(from);
+  }
+
+  @Override
+  public Type arithmetic(Type type) {
+    if (type instanceof CharType || type instanceof IntType) {
+      return new IntType(getLine(), getColumn());
+    }
+    if (type instanceof DoubleType) {
+      return new DoubleType(getLine(), getColumn());
+    }
+    return super.arithmetic(type);
+  }
+
+  @Override
+  public Type assign(Type type) {
+    if (type instanceof CharType) {
+      return this;
+    }
+    return super.assign(type);
   }
 }

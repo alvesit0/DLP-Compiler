@@ -1,12 +1,10 @@
 package es.uniovi.dlp.visitor.semantic;
 
+import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.*;
 import es.uniovi.dlp.ast.statements.Assignment;
 import es.uniovi.dlp.ast.statements.Read;
-import es.uniovi.dlp.ast.types.DoubleType;
-import es.uniovi.dlp.ast.types.ErrorType;
-import es.uniovi.dlp.ast.types.StructField;
-import es.uniovi.dlp.ast.types.Type;
+import es.uniovi.dlp.ast.types.*;
 import es.uniovi.dlp.error.Error;
 import es.uniovi.dlp.error.ErrorManager;
 import es.uniovi.dlp.error.ErrorReason;
@@ -17,8 +15,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Assignment assignment, Type param) {
-    assignment.getLeftExpression().accept(this, param);
     assignment.getRightExpression().accept(this, param);
+    assignment.getLeftExpression().accept(this, param);
 
     if (!assignment.getLeftExpression().getLValue())
       ErrorManager.getInstance()
@@ -29,6 +27,20 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
                       assignment.getLeftExpression().getLine(),
                       assignment.getLeftExpression().getColumn() - 2),
                   ErrorReason.LVALUE_REQUIRED));
+
+    Type leftType = assignment.getLeftExpression().getType();
+    Type rightType = assignment.getRightExpression().getType();
+
+    assignment.getLeftExpression().setType(leftType.assign(rightType));
+
+    if (assignment.getLeftExpression().getType() == null) {
+      assignment.getLeftExpression().setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(
+              assignment.getLeftExpression().getLine(),
+              assignment.getLeftExpression().getColumn(),
+              ErrorReason.INCOMPATIBLE_TYPES);
+    }
 
     return null;
   }
@@ -60,7 +72,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
     if (arithmeticOperation.getType() == null) {
       arithmeticOperation.setType(ErrorType.getInstance());
-      ErrorManager.getInstance().addError(arithmeticOperation.getLine(), arithmeticOperation.getColumn(),
+      ErrorManager.getInstance()
+          .addError(
+              arithmeticOperation.getLine(),
+              arithmeticOperation.getColumn(),
               ErrorReason.INVALID_ARITHMETIC);
     }
 
@@ -69,15 +84,17 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   public Type visit(Negative negative, Type param) {
+    ErrorManager e = ErrorManager.getInstance();
     super.visit(negative, param);
+    negative.setLValue(false);
+
+    negative.setType(negative.getExpression().getType().negative());
 
     if (negative.getType() == null) {
       negative.setType(ErrorType.getInstance());
-      ErrorManager.getInstance().addError(negative.getLine(), negative.getColumn(),
-              ErrorReason.INVALID_ARITHMETIC);
+      ErrorManager.getInstance()
+          .addError(negative.getLine(), negative.getColumn(), ErrorReason.INVALID_ARITHMETIC);
     }
-
-    negative.setLValue(false);
 
     return null;
   }
@@ -93,8 +110,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
     if (cast.getType() == null) {
       cast.setType(ErrorType.getInstance());
-      ErrorManager.getInstance().addError(cast.getLine(), cast.getColumn(),
-              ErrorReason.INVALID_CAST);
+      ErrorManager.getInstance()
+          .addError(cast.getLine(), cast.getColumn(), ErrorReason.INVALID_CAST);
     }
 
     cast.setLValue(false);
@@ -108,14 +125,30 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
+  public Type visit(VarDefinition varDefinition, Type param) {
+    super.visit(varDefinition, param);
+    return null;
+  }
+
+  @Override
   public Type visit(StructAccess structAccess, Type param) {
+    super.visit(structAccess, param);
     structAccess.setLValue(true);
+
+    // structAccess.setType(structAccess.getStruct().getType().indexing(structAccess.));
+
     return null;
   }
 
   @Override
   public Type visit(ArrayAccess arrayAccess, Type param) {
     arrayAccess.setLValue(true);
+    return null;
+  }
+
+  @Override
+  public Type visit(Struct struct, Type param) {
+    super.visit(struct, param);
     return null;
   }
 
