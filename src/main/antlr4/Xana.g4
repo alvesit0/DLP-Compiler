@@ -84,8 +84,8 @@ statement_list returns [List<Statement> list = new ArrayList<Statement>();]
             ;
 
 if_else_statement returns [If ast]
-            : 'if' expression 'do' sl1=statement_list 'end' {$ast = new If(null, $sl1.list, null);}
-            | 'if' expression 'do' sl1=statement_list 'else' sl2=statement_list 'end' {$ast = new If(null, $sl1.list, $sl2.list);}
+            : 'if' e=expression 'do' sl1=statement_list 'end' {$ast = new If($e.ast, $sl1.list, null);}
+            | 'if' e=expression 'do' sl1=statement_list 'else' sl2=statement_list 'end' {$ast = new If($e.ast, $sl1.list, $sl2.list);}
             ;
 
 while_statement returns [While ast]
