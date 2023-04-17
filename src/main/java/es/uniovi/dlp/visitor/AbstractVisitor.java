@@ -22,7 +22,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
 
   @Override
   public ReturnType visit(ArrayAccess arrayAccess, ParamType param) {
-    arrayAccess.getParams().forEach(p -> p.accept(this, param));
+    arrayAccess.getIndexes().forEach(p -> p.accept(this, param));
     arrayAccess.getArray().accept(this, param);
 
     return null;
@@ -218,7 +218,6 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
 
   @Override
   public ReturnType visit(StructField structField, ParamType param) {
-    structField.accept(this, param);
     return null;
   }
 

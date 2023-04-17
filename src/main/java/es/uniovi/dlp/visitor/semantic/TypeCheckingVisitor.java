@@ -15,8 +15,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Assignment assignment, Type param) {
-    assignment.getRightExpression().accept(this, param);
-    assignment.getLeftExpression().accept(this, param);
+    super.visit(assignment, param);
 
     if (!assignment.getLeftExpression().getLValue())
       ErrorManager.getInstance()
@@ -47,7 +46,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Read read, Type param) {
-    read.getExpression().accept(this, param);
+    super.visit(read, param);
 
     if (!read.getExpression().getLValue())
       ErrorManager.getInstance()
@@ -84,7 +83,6 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   public Type visit(Negative negative, Type param) {
-    ErrorManager e = ErrorManager.getInstance();
     super.visit(negative, param);
     negative.setLValue(false);
 
@@ -106,7 +104,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     Type leftType = cast.getLeftExpression().getType();
     Type rightType = cast.getType();
 
-    cast.setType(rightType.cast(leftType));
+    cast.setType(leftType.cast(rightType));
 
     if (cast.getType() == null) {
       cast.setType(ErrorType.getInstance());
@@ -135,30 +133,39 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     super.visit(structAccess, param);
     structAccess.setLValue(true);
 
-    // structAccess.setType(structAccess.getStruct().getType().indexing(structAccess.));
+    structAccess.setType(structAccess.getStruct().getType().dot(structAccess.getName()));
+
+    if (structAccess.getType() == null) {
+      structAccess.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(structAccess.getLine(), structAccess.getColumn(), ErrorReason.INVALID_DOT);
+    }
 
     return null;
   }
 
   @Override
   public Type visit(ArrayAccess arrayAccess, Type param) {
+    super.visit(arrayAccess, param);
     arrayAccess.setLValue(true);
-    return null;
-  }
 
-  @Override
-  public Type visit(Struct struct, Type param) {
-    super.visit(struct, param);
-    return null;
-  }
+    if (!arrayAccess.getArray().getType().isIndexable()) {
+      arrayAccess.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(arrayAccess.getLine(), arrayAccess.getColumn(), ErrorReason.INVALID_INDEXING);
+    } else
+      arrayAccess.setType(
+          arrayAccess.getArray().getType().indexing(arrayAccess.getIndexes().get(0).getType()));
 
-  @Override
-  public Type visit(DoubleType doubleType, Type param) {
-    return null;
-  }
+    if (arrayAccess.getType() == null) {
+      arrayAccess.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(
+              arrayAccess.getIndexes().get(0).getLine(),
+              arrayAccess.getIndexes().get(0).getColumn(),
+              ErrorReason.INVALID_INDEX_EXPRESSION);
+    }
 
-  @Override
-  public Type visit(StructField structField, Type param) {
     return null;
   }
 }

@@ -27,8 +27,9 @@ public class CharType extends AbstractType {
   @Override
   public Type cast(Type from) {
     if (from instanceof IntType) return from;
-    else if (from instanceof CharType) return from;
-    else if (from instanceof DoubleType) return from;
+    if (from instanceof CharType) return from;
+    if (from instanceof DoubleType) return from;
+    if (from instanceof ErrorType) return from;
     else return super.cast(from);
   }
 
@@ -47,6 +48,9 @@ public class CharType extends AbstractType {
   public Type assign(Type type) {
     if (type instanceof CharType) {
       return this;
+    }
+    if (type instanceof ErrorType) {
+      return type;
     }
     return super.assign(type);
   }

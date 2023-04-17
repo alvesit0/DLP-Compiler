@@ -26,10 +26,10 @@ public class DoubleType extends AbstractType {
     if (type instanceof DoubleType) {
       return this;
     }
-    else if (type instanceof IntType) {
+    if (type instanceof IntType) {
       return new IntType(getLine(), getColumn());
     }
-    else if (type instanceof CharType) {
+    if (type instanceof CharType) {
       return new CharType(getLine(), getColumn());
     }
     if (type instanceof ErrorType) {
@@ -48,6 +48,7 @@ public class DoubleType extends AbstractType {
     if (from instanceof IntType) return from;
     else if (from instanceof CharType) return from;
     else if (from instanceof DoubleType) return from;
+    if (from instanceof ErrorType) return from;
     else return super.cast(from);
   }
 

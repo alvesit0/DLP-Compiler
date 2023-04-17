@@ -126,7 +126,7 @@ expression returns [Expression ast]
             | intconst=INT_CONSTANT {$ast = new IntLiteral($intconst.getLine(), $intconst.getCharPositionInLine() + 1, LexerHelper.lexemeToInt($intconst.text));}
             | charconst=CHAR_CONSTANT {$ast = new CharLiteral($charconst.getLine(), $charconst.getCharPositionInLine() + 1, LexerHelper.lexemeToChar($charconst.text));}
             | realconst=REAL_CONSTANT {$ast = new DoubleLiteral($realconst.getLine(), $realconst.getCharPositionInLine() + 1, LexerHelper.lexemeToReal($realconst.text));}
-            | expr=expression'.'attribute=expression {$ast = new StructAccess($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $attribute.ast);}
+            | expr=expression'.'attribute=ID {$ast = new StructAccess($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $attribute.text);}
             | array=expression'['indexes+=expression']'('['indexes+=expression']')*
                 {
                     List<Expression> aux = new ArrayList<Expression>();

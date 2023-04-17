@@ -4,9 +4,9 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class StructAccess extends AbstractExpression {
   private Expression struct;
-  private Expression index;
+  private String index;
 
-  public StructAccess(int line, int column, Expression struct, Expression index) {
+  public StructAccess(int line, int column, Expression struct, String index) {
     super(line, column);
     this.struct = struct;
     this.index = index;
@@ -16,7 +16,7 @@ public class StructAccess extends AbstractExpression {
     return struct;
   }
 
-  public Expression getName() {
+  public String getName() {
     return index;
   }
 

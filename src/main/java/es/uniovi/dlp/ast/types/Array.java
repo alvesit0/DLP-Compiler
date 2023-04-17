@@ -37,6 +37,18 @@ public class Array extends AbstractType {
   }
 
   @Override
+  public Type indexing(Type type) {
+    if (type instanceof ErrorType) return type;
+    if (type instanceof IntType) return this.getType();
+    return super.indexing(type);
+  }
+
+  @Override
+  public boolean isIndexable() {
+    return true;
+  }
+
+  @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
     return visitor.visit(this, param);

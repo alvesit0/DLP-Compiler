@@ -5,20 +5,20 @@ import java.util.List;
 
 public class ArrayAccess extends AbstractExpression {
   private Expression array;
-  private List<Expression> params;
+  private List<Expression> indexes;
 
-  public ArrayAccess(int line, int column, Expression array, List<Expression> params) {
+  public ArrayAccess(int line, int column, Expression array, List<Expression> indexes) {
     super(line, column);
     this.array = array;
-    this.params = params;
+    this.indexes = indexes;
   }
 
   public Expression getArray() {
     return array;
   }
 
-  public List<Expression> getParams() {
-    return params;
+  public List<Expression> getIndexes() {
+    return indexes;
   }
 
   @Override

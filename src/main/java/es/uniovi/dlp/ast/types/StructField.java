@@ -31,6 +31,10 @@ public class StructField implements ASTNode {
     return this.column;
   }
 
+  public Type getType() {
+    return type;
+  }
+
   @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {

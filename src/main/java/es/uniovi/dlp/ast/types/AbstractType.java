@@ -32,4 +32,14 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   public Type indexing(Type type) {
     return null;
   }
+
+  @Override
+  public Type dot(String field) {
+    return null;
+  }
+
+  @Override
+  public boolean isIndexable() {
+    return false;
+  }
 }
