@@ -44,6 +44,31 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
+  public Type visit(Invocation invocation, Type param) {
+    super.visit(invocation,param);
+    var type = invocation.getVariable().getType();
+
+    if (type instanceof FuncType funcType) {
+      invocation.setType(funcType.getReturnType());
+      var params = funcType.getParams();
+      var args = invocation.getArguments();
+
+      var validArgs = params.size() == args.size();
+
+      for (int i = 0; validArgs && i < params.size(); i++) {
+
+      }
+
+    } else if (type instanceof ErrorType) {
+      invocation.setType(ErrorType.getInstance());
+    } else {
+      invocation.setType(ErrorType.getInstance());
+      ErrorManager.getInstance().addError(invocation.getLine(), invocation.getColumn(), ErrorReason.INVALID_ARGS);
+    }
+
+    return null;
+  }
+
   @Override
   public Type visit(Read read, Type param) {
     super.visit(read, param);

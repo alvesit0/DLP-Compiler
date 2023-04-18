@@ -4,9 +4,13 @@ import es.uniovi.dlp.ast.Program;
 import es.uniovi.dlp.error.ErrorManager;
 import es.uniovi.dlp.parser.XanaLexer;
 import es.uniovi.dlp.parser.XanaParser;
+import es.uniovi.dlp.visitor.codegeneration.CodeGenerator;
+import es.uniovi.dlp.visitor.codegeneration.ExecuteCGVisitor;
 import es.uniovi.dlp.visitor.semantic.IdentificationVisitor;
 import es.uniovi.dlp.visitor.semantic.TypeCheckingVisitor;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -16,8 +20,17 @@ public class Compiler {
   private Program program;
   private boolean reportErrors = true;
 
+  private boolean showDebug = false;
+
+  private OutputStreamWriter out;
+
   public Compiler(String filename) {
     this.filename = filename;
+  }
+
+  public Compiler(String file, OutputStreamWriter outputStreamWriter) {
+    this(file);
+    this.out = outputStreamWriter;
   }
 
   public void run() throws IOException {
@@ -25,7 +38,11 @@ public class Compiler {
     program = parse(filename);
     assignScope();
     assignType();
+
     checkErrors();
+
+    // assignOffsets();
+    generateCode();
   }
 
   private void checkErrors() {
@@ -62,7 +79,16 @@ public class Compiler {
     identificationVisitor.visit(program, null);
   }
 
+  private void generateCode() {
+    ExecuteCGVisitor executeVisitor = new ExecuteCGVisitor(filename, showDebug, out);
+    executeVisitor.visit(program, null);
+  }
+
   public void setReportErrors(boolean reportErrors) {
     this.reportErrors = reportErrors;
+  }
+
+  public void setShowDebug(boolean showDebug) {
+    this.showDebug = showDebug;
   }
 }
