@@ -10,7 +10,6 @@ public class While implements Statement {
 
   public While(Expression condition, List<Statement> body) {
     this.condition = condition;
-    // Condition no puede ser nulo
     this.body = body;
   }
 

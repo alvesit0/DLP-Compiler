@@ -45,6 +45,17 @@ public class CharType extends AbstractType {
   }
 
   @Override
+  public Type asParam(Type type) {
+    if (type instanceof CharType || type instanceof IntType) {
+      return new IntType(getLine(), getColumn());
+    }
+    if (type instanceof DoubleType) {
+      return new DoubleType(getLine(), getColumn());
+    }
+    return super.asParam(type);
+  }
+
+  @Override
   public Type assign(Type type) {
     if (type instanceof CharType) {
       return this;
@@ -53,5 +64,14 @@ public class CharType extends AbstractType {
       return type;
     }
     return super.assign(type);
+  }
+
+  @Override
+  public Type comparison(Type type) {
+    if (this.getClass().equals(type.getClass())
+            || type instanceof DoubleType
+            || type instanceof CharType) return new IntType(getLine(), getColumn());
+    if (type instanceof ErrorType) return type;
+    return super.comparison(type);
   }
 }

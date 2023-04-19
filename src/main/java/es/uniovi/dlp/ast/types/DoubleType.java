@@ -22,6 +22,14 @@ public class DoubleType extends AbstractType {
   }
 
   @Override
+  public Type asParam(Type type) {
+    if (type instanceof CharType || type instanceof IntType || type instanceof DoubleType) {
+      return this;
+    }
+    return super.asParam(type);
+  }
+
+  @Override
   public Type assign(Type type) {
     if (type instanceof DoubleType) {
       return this;
@@ -50,6 +58,15 @@ public class DoubleType extends AbstractType {
     else if (from instanceof DoubleType) return from;
     if (from instanceof ErrorType) return from;
     else return super.cast(from);
+  }
+
+  @Override
+  public Type comparison(Type type) {
+    if (this.getClass().equals(type.getClass())
+            || type instanceof DoubleType
+            || type instanceof CharType) return new IntType(getLine(), getColumn());
+    if (type instanceof ErrorType) return type;
+    return super.comparison(type);
   }
 
   @Override

@@ -6,14 +6,15 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
 
-    private CodeGenerator cg;
-    public AddressCGVisitor(CodeGenerator cg) {
-        this.cg = cg;
-    }
+  private CodeGenerator cg;
 
-    @Override
-    public Type visit(Variable v, Type param) {
-        cg.write("pusha\t" + v.getDefinition().getOffset());
-        return null;
-    }
+  public AddressCGVisitor(CodeGenerator cg) {
+    this.cg = cg;
+  }
+
+  @Override
+  public Type visit(Variable v, Type param) {
+    cg.write("pusha\t" + v.getDefinition().getOffset());
+    return null;
+  }
 }

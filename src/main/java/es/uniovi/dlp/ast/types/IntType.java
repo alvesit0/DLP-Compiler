@@ -31,6 +31,17 @@ public class IntType extends AbstractType {
   }
 
   @Override
+  public Type asParam(Type type) {
+    if (type instanceof CharType || type instanceof IntType) {
+      return this;
+    }
+    if (type instanceof DoubleType) {
+      return new DoubleType(getLine(), getColumn());
+    }
+    return super.asParam(type);
+  }
+
+  @Override
   public Type assign(Type type) {
     if (type instanceof IntType) {
       return this;
@@ -53,5 +64,31 @@ public class IntType extends AbstractType {
     if (from instanceof DoubleType) return from;
     if (from instanceof ErrorType) return from;
     else return super.cast(from);
+  }
+
+  @Override // <, >, <=, >=
+  public Type comparison(Type type) {
+    if (this.getClass().equals(type.getClass())
+            || type instanceof DoubleType
+            || type instanceof CharType) return this;
+    if (type instanceof ErrorType) return type;
+    return super.comparison(type);
+  }
+
+  @Override // || y &&
+  public Type logical(Type type) {
+    if (this.getClass().equals(type.getClass())) return this;
+    if (type instanceof ErrorType) return type;
+    return super.logical(type);
+  }
+
+  @Override
+  public Type booleanNot() {
+    return this;
+  }
+
+  @Override
+  public Type isBoolean() {
+    return this;
   }
 }

@@ -6,6 +6,7 @@ import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.*;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.*;
+import es.uniovi.dlp.error.ErrorManager;
 
 public abstract class AbstractVisitor<ReturnType, ParamType>
     implements Visitor<ReturnType, ParamType> {

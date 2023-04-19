@@ -44,10 +44,14 @@ public class Struct extends AbstractType {
 
   @Override
   public Type dot(String field) {
-    for (StructField s : fields)
-      if (s.getName().equals(field)) return s.getType();
+    for (StructField s : fields) if (s.getName().equals(field)) return s.getType();
 
     return null;
+  }
+
+  @Override
+  public boolean isStruct() {
+    return true;
   }
 
   @Override

@@ -12,7 +12,6 @@ public class If implements Statement {
 
   public If(Expression condition, List<Statement> ifBody, List<Statement> elseBody) {
     this.condition = condition;
-    // Condition no puede ser nulo
     this.ifBody = ifBody;
     this.elseBody = elseBody;
   }

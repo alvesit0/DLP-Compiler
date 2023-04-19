@@ -30,14 +30,6 @@ definition returns [List<Definition> list = new ArrayList<Definition>();]
             | main_function {$list.add($main_function.ast);}
             ;
 
-var_definition_list returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
-            : ids+=ID (','ids+=ID)* '::' t=type {
-                for (var id : $ids) {
-                    $list.add(new VarDefinition(id.getLine(), id.getCharPositionInLine() + 1, id.getText(), $type.ast));
-                }
-            }
-            ;
-
 function_definition returns [FunctionDefinition ast]
             : 'def' f=ID'('params')' '::' t=function_type 'do' function_body 'end'
                 {$ast = new FunctionDefinition($f.getLine(), 1,
@@ -58,12 +50,21 @@ params returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
             |
             ;
 
+var_definition_list returns [List<VarDefinition> list = new ArrayList<VarDefinition>();]
+            : ids+=ID (','ids+=ID)* '::' t=type {
+                for (var id : $ids) {
+                    $list.add(new VarDefinition(id.getLine(), id.getCharPositionInLine() + 1, id.getText(), $type.ast));
+                }
+            }
+            ;
+
 function_body returns [List<Statement> statementList = new ArrayList<>(), List<VarDefinition> varDefinitionList = new ArrayList<>()]
-            : (var_definition_list
+            :
+            (var_definition_list
                 {$varDefinitionList.addAll($var_definition_list.list);}
-              )*(statement
-                {$statementList.addAll($statement.list);}
-              )*
+            | statement
+              {$statementList.addAll($statement.list);}
+            )*
             ;
 
 
@@ -84,7 +85,7 @@ statement_list returns [List<Statement> list = new ArrayList<Statement>();]
             ;
 
 if_else_statement returns [If ast]
-            : 'if' e=expression 'do' sl1=statement_list 'end' {$ast = new If($e.ast, $sl1.list, null);}
+            : 'if' e=expression 'do' sl1=statement_list 'end' {$ast = new If($e.ast, $sl1.list, new ArrayList<Statement>());}
             | 'if' e=expression 'do' sl1=statement_list 'else' sl2=statement_list 'end' {$ast = new If($e.ast, $sl1.list, $sl2.list);}
             ;
 
@@ -115,7 +116,7 @@ in_statement returns [List<Read> list = new ArrayList<>()]
             ;
 
 io_list returns [List<Expression> list = new ArrayList<Expression>();]
-            : expression {$list.add($expression.ast);} (','expression{$list.add($expression.ast);})*
+            : e1=expression {$list.add($e1.ast);} (','e2=expression{$list.add($e2.ast);})*
             ;
 
 
@@ -194,7 +195,12 @@ INT_CONSTANT: [0-9]+
 CHAR_CONSTANT: '\'' (.|'\\t'|'\\n'|'\\'[0-9][0-9][0-9]) '\''
             ;
 
-REAL_CONSTANT: [0-9]+('.'|'E''-'?)[0-9]+
+REAL_CONSTANT: DECIMAL
+            | (DECIMAL | INT_CONSTANT) [eE] [+-]? INT_CONSTANT
+            ;
+
+fragment DECIMAL: INT_CONSTANT? '.' [0-9]+
+            | INT_CONSTANT '.' [0-9]*
             ;
 
 ID : [_a-zA-Z][_a-zA-Z0-9]*

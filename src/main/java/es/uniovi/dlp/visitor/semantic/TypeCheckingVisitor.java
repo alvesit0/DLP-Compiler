@@ -1,9 +1,9 @@
 package es.uniovi.dlp.visitor.semantic;
 
+import es.uniovi.dlp.ast.definitions.FunctionDefinition;
 import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.*;
-import es.uniovi.dlp.ast.statements.Assignment;
-import es.uniovi.dlp.ast.statements.Read;
+import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.*;
 import es.uniovi.dlp.error.Error;
 import es.uniovi.dlp.error.ErrorManager;
@@ -12,6 +12,8 @@ import es.uniovi.dlp.error.Location;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
+
+  // ###################### STATEMENTS ######################
 
   @Override
   public Type visit(Assignment assignment, Type param) {
@@ -24,7 +26,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
               new Error(
                   new Location(
                       assignment.getLeftExpression().getLine(),
-                      assignment.getLeftExpression().getColumn() - 2),
+                      assignment.getLeftExpression().getColumn()),
                   ErrorReason.LVALUE_REQUIRED));
 
     Type leftType = assignment.getLeftExpression().getType();
@@ -44,31 +46,6 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-  public Type visit(Invocation invocation, Type param) {
-    super.visit(invocation,param);
-    var type = invocation.getVariable().getType();
-
-    if (type instanceof FuncType funcType) {
-      invocation.setType(funcType.getReturnType());
-      var params = funcType.getParams();
-      var args = invocation.getArguments();
-
-      var validArgs = params.size() == args.size();
-
-      for (int i = 0; validArgs && i < params.size(); i++) {
-
-      }
-
-    } else if (type instanceof ErrorType) {
-      invocation.setType(ErrorType.getInstance());
-    } else {
-      invocation.setType(ErrorType.getInstance());
-      ErrorManager.getInstance().addError(invocation.getLine(), invocation.getColumn(), ErrorReason.INVALID_ARGS);
-    }
-
-    return null;
-  }
-
   @Override
   public Type visit(Read read, Type param) {
     super.visit(read, param);
@@ -79,8 +56,102 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
           .add(
               new Error(
                   new Location(
-                      read.getExpression().getLine(), read.getExpression().getColumn() - 2),
+                      read.getExpression().getLine(), read.getExpression().getColumn()),
                   ErrorReason.LVALUE_REQUIRED));
+
+    return null;
+  }
+
+  @Override
+  public Type visit(Return returnStatement, Type param) {
+    super.visit(returnStatement, param);
+
+    returnStatement
+        .getReturnValue()
+        .setType(returnStatement.getReturnValue().getType().subtype(param));
+
+    if (returnStatement.getReturnValue().getType() == null) {
+      returnStatement.getReturnValue().setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(
+              returnStatement.getReturnValue().getLine(),
+              returnStatement.getReturnValue().getColumn(),
+              ErrorReason.INVALID_RETURN_TYPE);
+    }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(If ifStatement, Type param) {
+    super.visit(ifStatement, param);
+
+    ifStatement.getCondition().setType(ifStatement.getCondition().getType().isBoolean());
+
+    if (ifStatement.getCondition().getType() == null) {
+      ifStatement.getCondition().setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+              .addError(
+                      ifStatement.getCondition().getLine(),
+                      ifStatement.getCondition().getColumn(),
+                      ErrorReason.NOT_LOGICAL);
+    }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(While whileStatement, Type param) {
+    ErrorManager e = ErrorManager.getInstance();
+    super.visit(whileStatement, param);
+
+    whileStatement.getCondition().setType(whileStatement.getCondition().getType().isBoolean());
+
+    if (whileStatement.getCondition().getType() == null) {
+      whileStatement.getCondition().setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+              .addError(
+                      whileStatement.getCondition().getLine(),
+                      whileStatement.getCondition().getColumn(),
+                      ErrorReason.NOT_LOGICAL);
+    }
+
+    return null;
+  }
+
+  // ###################### EXPRESSIONS ######################
+
+  public Type visit(Invocation invocation, Type param) {
+    super.visit(invocation, param);
+    var type = invocation.getVariable().getType();
+
+    if (type instanceof FuncType funcType) {
+      invocation.setType(funcType.getReturnType());
+      var params = funcType.getParams();
+      var args = invocation.getArguments();
+
+      var validArgSize = params.size() == args.size();
+
+      if (!validArgSize) {
+        invocation.setType(ErrorType.getInstance());
+        ErrorManager.getInstance()
+            .addError(invocation.getLine(), invocation.getColumn(), ErrorReason.INVALID_ARGS);
+      }
+
+      for (int i = 0; validArgSize && i < params.size(); i++)
+        if (params.get(i).getType().asParam(args.get(i).getType()) == null) {
+          invocation.setType(ErrorType.getInstance());
+          ErrorManager.getInstance()
+              .addError(invocation.getLine(), invocation.getColumn(), ErrorReason.INVALID_ARGS);
+        }
+
+    } else if (type instanceof ErrorType) {
+      invocation.setType(ErrorType.getInstance());
+    } else {
+      invocation.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(invocation.getLine(), invocation.getColumn(), ErrorReason.INVALID_INVOCATION);
+    }
 
     return null;
   }
@@ -148,22 +219,20 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(VarDefinition varDefinition, Type param) {
-    super.visit(varDefinition, param);
-    return null;
-  }
-
-  @Override
   public Type visit(StructAccess structAccess, Type param) {
     super.visit(structAccess, param);
     structAccess.setLValue(true);
 
-    structAccess.setType(structAccess.getStruct().getType().dot(structAccess.getName()));
+    if (!structAccess.getStruct().getType().isStruct()) {
+      structAccess.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(structAccess.getLine(), structAccess.getColumn(), ErrorReason.INVALID_DOT);
+    } else structAccess.setType(structAccess.getStruct().getType().dot(structAccess.getName()));
 
     if (structAccess.getType() == null) {
       structAccess.setType(ErrorType.getInstance());
       ErrorManager.getInstance()
-          .addError(structAccess.getLine(), structAccess.getColumn(), ErrorReason.INVALID_DOT);
+          .addError(structAccess.getLine(), structAccess.getColumn(), ErrorReason.NO_SUCH_FIELD);
     }
 
     return null;
@@ -191,6 +260,82 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
               ErrorReason.INVALID_INDEX_EXPRESSION);
     }
 
+    return null;
+  }
+
+  @Override
+  public Type visit(BooleanOperation booleanOperation, Type param) {
+    super.visit(booleanOperation, param);
+    booleanOperation.setLValue(false);
+    Type leftType = booleanOperation.getLeftExpression().getType();
+    Type rightType = booleanOperation.getRightExpression().getType();
+
+    booleanOperation.setType(leftType.comparison(rightType));
+
+    if (booleanOperation.getType() == null) {
+      booleanOperation.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+              .addError(
+                      booleanOperation.getLine(),
+                      booleanOperation.getColumn(),
+                      ErrorReason.INVALID_COMPARISON);
+    }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(ComparisonOperation comparisonOperation, Type param) {
+    super.visit(comparisonOperation, param);
+    comparisonOperation.setLValue(false);
+
+    Type leftType = comparisonOperation.getLeftExpression().getType();
+    Type rightType = comparisonOperation.getRightExpression().getType();
+
+    comparisonOperation.setType(leftType.logical(rightType));
+
+    if (comparisonOperation.getType() == null) {
+      comparisonOperation.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+              .addError(
+                      comparisonOperation.getLine(),
+                      comparisonOperation.getColumn(),
+                      ErrorReason.INVALID_LOGICAL);
+    }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(BooleanNot booleanNot, Type param) {
+    super.visit(booleanNot, param);
+    booleanNot.setLValue(false);
+
+    booleanNot.setType(booleanNot.getExpression().getType().booleanNot());
+
+    if (booleanNot.getType() == null) {
+      booleanNot.setType(ErrorType.getInstance());
+      ErrorManager.getInstance().addError(
+              booleanNot.getLine(),
+              booleanNot.getColumn(),
+              ErrorReason.NOT_LOGICAL
+      );
+    }
+
+    return null;
+  }
+
+  // ###################### DEFINITIONS ######################
+
+  @Override
+  public Type visit(VarDefinition varDefinition, Type param) {
+    super.visit(varDefinition, param);
+    return null;
+  }
+
+  @Override
+  public Type visit(FunctionDefinition functionDefinition, Type param) {
+    super.visit(functionDefinition, ((FuncType) functionDefinition.getType()).getReturnType());
     return null;
   }
 }

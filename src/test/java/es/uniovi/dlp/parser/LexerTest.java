@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import org.antlr.v4.runtime.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled("As we implemented the Parser, this test is no longer valid")
 public class LexerTest {
 
   @Test

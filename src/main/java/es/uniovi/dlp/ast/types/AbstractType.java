@@ -24,6 +24,11 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   }
 
   @Override
+  public Type booleanNot() {
+    return null;
+  }
+
+  @Override
   public Type assign(Type type) {
     return null;
   }
@@ -34,12 +39,41 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   }
 
   @Override
+  public Type subtype(Type type) {
+    if (this.getClass().equals(type.getClass())) return this;
+    return null;
+  }
+
+  @Override
+  public Type asParam(Type type) {
+    return null;
+  }
+
+  @Override
   public Type dot(String field) {
     return null;
   }
 
   @Override
+  public Type comparison(Type type) {
+    return null;
+  }
+
+  @Override
+  public Type logical(Type type) {
+    return null;
+  }
+
+  @Override
+  public Type isBoolean() { return null; }
+
+  @Override
   public boolean isIndexable() {
+    return false;
+  }
+
+  @Override
+  public boolean isStruct() {
     return false;
   }
 }

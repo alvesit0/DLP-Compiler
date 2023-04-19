@@ -37,5 +37,7 @@ public abstract class AbstractDefinition extends AbstractASTNode implements Defi
   }
 
   @Override
-  public int getOffset() { return offset; }
+  public int getOffset() {
+    return offset;
+  }
 }
