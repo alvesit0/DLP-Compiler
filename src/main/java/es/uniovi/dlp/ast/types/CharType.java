@@ -69,8 +69,8 @@ public class CharType extends AbstractType {
   @Override
   public Type comparison(Type type) {
     if (this.getClass().equals(type.getClass())
-            || type instanceof DoubleType
-            || type instanceof CharType) return new IntType(getLine(), getColumn());
+        || type instanceof DoubleType
+        || type instanceof CharType) return new IntType(getLine(), getColumn());
     if (type instanceof ErrorType) return type;
     return super.comparison(type);
   }

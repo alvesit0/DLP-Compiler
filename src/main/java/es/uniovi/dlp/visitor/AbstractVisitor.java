@@ -6,7 +6,6 @@ import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.*;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.*;
-import es.uniovi.dlp.error.ErrorManager;
 
 public abstract class AbstractVisitor<ReturnType, ParamType>
     implements Visitor<ReturnType, ParamType> {
@@ -78,7 +77,6 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   @Override
   public ReturnType visit(Invocation invocation, ParamType param) {
     invocation.getArguments().forEach(a -> a.accept(this, param));
-    invocation.getVariable().accept(this, param);
 
     return null;
   }

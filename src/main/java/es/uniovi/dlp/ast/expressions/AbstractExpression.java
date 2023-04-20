@@ -12,6 +12,7 @@ public abstract class AbstractExpression extends AbstractASTNode implements Expr
     super(line, column);
   }
 
+  @Override
   public Type getType() {
     return type;
   }

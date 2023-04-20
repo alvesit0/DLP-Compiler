@@ -1674,8 +1674,8 @@ public class XanaParser extends Parser {
                         ((ExpressionContext) _localctx).expression = expression(7);
                     ((ExpressionContext) _localctx).ast =
                         new ArithmeticOperation(
-                            ((ExpressionContext) _localctx).op.getLine(),
-                            ((ExpressionContext) _localctx).op.getCharPositionInLine() + 1,
+                            ((ExpressionContext) _localctx).expr1.ast.getLine(),
+                            ((ExpressionContext) _localctx).expr1.ast.getColumn(),
                             (((ExpressionContext) _localctx).op != null
                                 ? ((ExpressionContext) _localctx).op.getText()
                                 : null),

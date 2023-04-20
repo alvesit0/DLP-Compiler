@@ -136,7 +136,7 @@ expression returns [Expression ast]
                 }
             | expr=expression 'as' type {$ast = new Cast($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $type.ast);}
             | function_invocation {$ast = $function_invocation.ast;}
-            | expr1=expression op=('+'|'-'|'*'|'/'|'%') expr2=expression {$ast = new ArithmeticOperation($op.getLine(), $op.getCharPositionInLine() + 1, $op.text, $expr1.ast, $expr2.ast);}
+            | expr1=expression op=('+'|'-'|'*'|'/'|'%') expr2=expression {$ast = new ArithmeticOperation($expr1.ast.getLine(), $expr1.ast.getColumn(), $op.text, $expr1.ast, $expr2.ast);}
             | '!'expression {$ast = new BooleanNot($expression.ast.getLine(), $expression.ast.getColumn(), $expression.ast);}
             | expr1=expression op=('||'|'&&') expr2=expression {$ast = new ComparisonOperation($op.getLine(), $op.getCharPositionInLine() + 1, $op.text, $expr1.ast, $expr2.ast);}
             | expr1=expression op=('<'|'>'|'<='|'>='|'=='|'!=') expr2=expression {$ast = new BooleanOperation($op.getLine(), $op.getCharPositionInLine() + 1, $op.text, $expr1.ast, $expr2.ast);}

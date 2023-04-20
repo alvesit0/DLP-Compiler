@@ -11,6 +11,8 @@ import es.uniovi.dlp.error.ErrorReason;
 import es.uniovi.dlp.error.Location;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
+import javax.lang.model.type.ArrayType;
+
 public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   // ###################### STATEMENTS ######################
@@ -30,6 +32,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
                   ErrorReason.LVALUE_REQUIRED));
 
     Type leftType = assignment.getLeftExpression().getType();
+    if (leftType == null) {
+      assignment.getLeftExpression().setType(ErrorType.getInstance());
+      leftType = ErrorType.getInstance();
+    }
     Type rightType = assignment.getRightExpression().getType();
 
     assignment.getLeftExpression().setType(leftType.assign(rightType));
@@ -50,14 +56,14 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   public Type visit(Read read, Type param) {
     super.visit(read, param);
 
-    if (!read.getExpression().getLValue())
+    if (!read.getExpression().getLValue()) {
       ErrorManager.getInstance()
           .getErrors()
           .add(
               new Error(
-                  new Location(
-                      read.getExpression().getLine(), read.getExpression().getColumn()),
+                  new Location(read.getExpression().getLine(), read.getExpression().getColumn()),
                   ErrorReason.LVALUE_REQUIRED));
+    }
 
     return null;
   }
@@ -91,10 +97,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     if (ifStatement.getCondition().getType() == null) {
       ifStatement.getCondition().setType(ErrorType.getInstance());
       ErrorManager.getInstance()
-              .addError(
-                      ifStatement.getCondition().getLine(),
-                      ifStatement.getCondition().getColumn(),
-                      ErrorReason.NOT_LOGICAL);
+          .addError(
+              ifStatement.getCondition().getLine(),
+              ifStatement.getCondition().getColumn(),
+              ErrorReason.NOT_LOGICAL);
     }
 
     return null;
@@ -110,10 +116,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     if (whileStatement.getCondition().getType() == null) {
       whileStatement.getCondition().setType(ErrorType.getInstance());
       ErrorManager.getInstance()
-              .addError(
-                      whileStatement.getCondition().getLine(),
-                      whileStatement.getCondition().getColumn(),
-                      ErrorReason.NOT_LOGICAL);
+          .addError(
+              whileStatement.getCondition().getLine(),
+              whileStatement.getCondition().getColumn(),
+              ErrorReason.NOT_LOGICAL);
     }
 
     return null;
@@ -123,6 +129,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   public Type visit(Invocation invocation, Type param) {
     super.visit(invocation, param);
+
     var type = invocation.getVariable().getType();
 
     if (type instanceof FuncType funcType) {
@@ -145,7 +152,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
               .addError(invocation.getLine(), invocation.getColumn(), ErrorReason.INVALID_ARGS);
         }
 
-    } else if (type instanceof ErrorType) {
+    } else if (type == null) {
       invocation.setType(ErrorType.getInstance());
     } else {
       invocation.setType(ErrorType.getInstance());
@@ -170,7 +177,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
       ErrorManager.getInstance()
           .addError(
               arithmeticOperation.getLine(),
-              arithmeticOperation.getColumn(),
+              arithmeticOperation.getColumn() + 2,
               ErrorReason.INVALID_ARITHMETIC);
     }
 
@@ -214,6 +221,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Variable variable, Type param) {
+    super.visit(variable, param);
     variable.setLValue(true);
     return null;
   }
@@ -243,7 +251,9 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     super.visit(arrayAccess, param);
     arrayAccess.setLValue(true);
 
-    if (!arrayAccess.getArray().getType().isIndexable()) {
+    boolean correctIndexAmmount = arrayAccess.getIndexes().size() == 1;
+
+    if (!arrayAccess.getArray().getType().isIndexable() || !correctIndexAmmount) {
       arrayAccess.setType(ErrorType.getInstance());
       ErrorManager.getInstance()
           .addError(arrayAccess.getLine(), arrayAccess.getColumn(), ErrorReason.INVALID_INDEXING);
@@ -275,10 +285,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     if (booleanOperation.getType() == null) {
       booleanOperation.setType(ErrorType.getInstance());
       ErrorManager.getInstance()
-              .addError(
-                      booleanOperation.getLine(),
-                      booleanOperation.getColumn(),
-                      ErrorReason.INVALID_COMPARISON);
+          .addError(
+              booleanOperation.getLine(),
+              booleanOperation.getColumn(),
+              ErrorReason.INVALID_COMPARISON);
     }
 
     return null;
@@ -297,10 +307,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     if (comparisonOperation.getType() == null) {
       comparisonOperation.setType(ErrorType.getInstance());
       ErrorManager.getInstance()
-              .addError(
-                      comparisonOperation.getLine(),
-                      comparisonOperation.getColumn(),
-                      ErrorReason.INVALID_LOGICAL);
+          .addError(
+              comparisonOperation.getLine(),
+              comparisonOperation.getColumn(),
+              ErrorReason.INVALID_LOGICAL);
     }
 
     return null;
@@ -315,11 +325,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
     if (booleanNot.getType() == null) {
       booleanNot.setType(ErrorType.getInstance());
-      ErrorManager.getInstance().addError(
-              booleanNot.getLine(),
-              booleanNot.getColumn(),
-              ErrorReason.NOT_LOGICAL
-      );
+      ErrorManager.getInstance()
+          .addError(booleanNot.getLine(), booleanNot.getColumn(), ErrorReason.NOT_LOGICAL);
     }
 
     return null;

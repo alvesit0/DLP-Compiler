@@ -18,7 +18,7 @@ public class Variable extends AbstractExpression {
 
   public void setDefinition(Definition definition) {
     this.definition = definition;
-    setType(definition.getType());
+    if (definition != null) setType(definition.getType());
   }
 
   @Override

@@ -19,11 +19,15 @@ public class IdentificationVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Variable variable, Type param) {
+
     Definition definition = symbolTable.find(variable.getName());
     if (definition == null)
       ErrorManager.getInstance()
           .addError(variable.getLine(), variable.getColumn(), ErrorReason.VARIABLE_NOT_DECLARED);
+
     variable.setDefinition(definition);
+    super.visit(variable, param);
+
     return null;
   }
 
@@ -35,7 +39,6 @@ public class IdentificationVisitor extends AbstractVisitor<Type, Type> {
               functionDefinition.getLine(),
               functionDefinition.getColumn(),
               ErrorReason.FUNCTION_ALREADY_DECLARED);
-    functionDefinition.getVarDefinitions().forEach(((varDef) -> {}));
 
     symbolTable.set();
     super.visit(functionDefinition, param);
@@ -45,7 +48,7 @@ public class IdentificationVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(Invocation invocation, Type param) {
-
+    ErrorManager e = ErrorManager.getInstance();
     Definition definition = symbolTable.find(invocation.getVariable().getName());
     if (definition == null)
       ErrorManager.getInstance()
@@ -53,6 +56,8 @@ public class IdentificationVisitor extends AbstractVisitor<Type, Type> {
               invocation.getLine(), invocation.getColumn(), ErrorReason.FUNCTION_NOT_DECLARED);
 
     invocation.getVariable().setDefinition(definition);
+
+    super.visit(invocation, param);
 
     return null;
   }

@@ -65,7 +65,9 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   }
 
   @Override
-  public Type isBoolean() { return null; }
+  public Type isBoolean() {
+    return null;
+  }
 
   @Override
   public boolean isIndexable() {

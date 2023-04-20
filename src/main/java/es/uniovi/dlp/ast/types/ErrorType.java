@@ -15,6 +15,11 @@ public class ErrorType extends AbstractType {
   }
 
   @Override
+  public Type assign(Type type) {
+    return this;
+  }
+
+  @Override
   public Type isBoolean() {
     return this;
   }

@@ -35,9 +35,6 @@ public class IntType extends AbstractType {
     if (type instanceof CharType || type instanceof IntType) {
       return this;
     }
-    if (type instanceof DoubleType) {
-      return new DoubleType(getLine(), getColumn());
-    }
     return super.asParam(type);
   }
 
@@ -69,8 +66,8 @@ public class IntType extends AbstractType {
   @Override // <, >, <=, >=
   public Type comparison(Type type) {
     if (this.getClass().equals(type.getClass())
-            || type instanceof DoubleType
-            || type instanceof CharType) return this;
+        || type instanceof DoubleType
+        || type instanceof CharType) return this;
     if (type instanceof ErrorType) return type;
     return super.comparison(type);
   }
