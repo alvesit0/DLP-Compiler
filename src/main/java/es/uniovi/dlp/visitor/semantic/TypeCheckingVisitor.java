@@ -11,8 +11,6 @@ import es.uniovi.dlp.error.ErrorReason;
 import es.uniovi.dlp.error.Location;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
-import javax.lang.model.type.ArrayType;
-
 public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
 
   // ###################### STATEMENTS ######################

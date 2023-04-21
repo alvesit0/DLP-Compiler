@@ -30,4 +30,6 @@ public interface Type extends ASTNode {
   boolean isIndexable();
 
   boolean isStruct();
+
+  int getNumberOfBytes();
 }

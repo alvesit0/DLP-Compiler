@@ -5,6 +5,7 @@ import es.uniovi.dlp.error.ErrorManager;
 import es.uniovi.dlp.parser.XanaLexer;
 import es.uniovi.dlp.parser.XanaParser;
 import es.uniovi.dlp.visitor.codegeneration.ExecuteCGVisitor;
+import es.uniovi.dlp.visitor.codegeneration.OffsetVisitor;
 import es.uniovi.dlp.visitor.semantic.IdentificationVisitor;
 import es.uniovi.dlp.visitor.semantic.TypeCheckingVisitor;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class Compiler {
 
     checkErrors();
 
-    // assignOffsets();
+    assignOffsets();
     generateCode();
   }
 
@@ -75,6 +76,11 @@ public class Compiler {
   private void assignScope() {
     IdentificationVisitor identificationVisitor = new IdentificationVisitor();
     identificationVisitor.visit(program, null);
+  }
+
+  private void assignOffsets() {
+    OffsetVisitor offsetVisitor = new OffsetVisitor();
+    offsetVisitor.visit(program, null);
   }
 
   private void generateCode() {

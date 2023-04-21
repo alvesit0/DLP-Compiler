@@ -55,6 +55,15 @@ public class Struct extends AbstractType {
   }
 
   @Override
+  public int getNumberOfBytes() {
+    int result = 0;
+    for (StructField structField : fields) {
+      result += structField.getType().getNumberOfBytes();
+    }
+    return result;
+  }
+
+  @Override
   public String toString() {
     return "struct";
   }

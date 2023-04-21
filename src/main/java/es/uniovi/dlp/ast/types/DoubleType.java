@@ -30,6 +30,11 @@ public class DoubleType extends AbstractType {
   }
 
   @Override
+  public int getNumberOfBytes() {
+    return 4;
+  }
+
+  @Override
   public Type assign(Type type) {
     if (type instanceof DoubleType) {
       return this;

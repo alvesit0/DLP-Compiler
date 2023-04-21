@@ -88,4 +88,9 @@ public class IntType extends AbstractType {
   public Type isBoolean() {
     return this;
   }
+
+  @Override
+  public int getNumberOfBytes() {
+    return 2;
+  }
 }

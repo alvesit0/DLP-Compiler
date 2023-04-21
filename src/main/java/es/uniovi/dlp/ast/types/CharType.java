@@ -56,6 +56,11 @@ public class CharType extends AbstractType {
   }
 
   @Override
+  public int getNumberOfBytes() {
+    return 1;
+  }
+
+  @Override
   public Type assign(Type type) {
     if (type instanceof CharType) {
       return this;

@@ -35,9 +35,4 @@ public abstract class AbstractDefinition extends AbstractASTNode implements Defi
   public String getName() {
     return name;
   }
-
-  @Override
-  public int getOffset() {
-    return offset;
-  }
 }

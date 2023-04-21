@@ -25,6 +25,11 @@ public class ErrorType extends AbstractType {
   }
 
   @Override
+  public int getNumberOfBytes() {
+    return 0;
+  }
+
+  @Override
   public String toString() {
     return "error";
   }
