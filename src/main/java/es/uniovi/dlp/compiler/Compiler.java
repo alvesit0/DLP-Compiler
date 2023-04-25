@@ -41,7 +41,8 @@ public class Compiler {
     checkErrors();
 
     assignOffsets();
-    generateCode();
+    if (this.out != null)
+      generateCode();
   }
 
   private void checkErrors() {
