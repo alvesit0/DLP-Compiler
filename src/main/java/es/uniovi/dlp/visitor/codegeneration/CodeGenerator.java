@@ -13,6 +13,12 @@ public class CodeGenerator {
     this.showDebug = showDebug;
     this.filename = filename;
     this.out = out;
+    try {
+      this.out.write("#source \"" + filename + "\"");
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void writePragma(String string) {
@@ -21,8 +27,12 @@ public class CodeGenerator {
 
   public void comment(String comment) {
     if (showDebug) {
-      // writeInstruction("' " + comment);
+      writeInstruction("' " + comment);
     }
+  }
+
+  public void newLine(int number) {
+    write("\n#line " + number);
   }
 
   public void main() {
@@ -31,6 +41,10 @@ public class CodeGenerator {
     }
     write("call main");
     write("halt");
+  }
+
+  public void writeInstruction(String text) {
+    write("\t" + text);
   }
 
   public void write(String text) {
