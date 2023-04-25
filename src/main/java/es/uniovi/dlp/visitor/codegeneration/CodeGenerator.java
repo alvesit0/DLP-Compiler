@@ -9,14 +9,15 @@ public class CodeGenerator {
   private String filename;
   private OutputStreamWriter out;
 
+  private int lastLabelId = 0;
+
   public CodeGenerator(String filename, boolean showDebug, OutputStreamWriter out) {
     this.showDebug = showDebug;
     this.filename = filename;
     this.out = out;
     try {
       this.out.write("#source \"" + filename + "\"");
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -33,6 +34,22 @@ public class CodeGenerator {
 
   public void newLine(int number) {
     write("\n#line " + number);
+  }
+
+  public void allocateLabels(int howMany) {
+    lastLabelId += howMany;
+  }
+
+  public int getLastLabelId() {
+    return lastLabelId;
+  }
+
+  public void label(int id) {
+    label("label" + id);
+  }
+
+  public void label(String label) {
+    writeInstruction(label + ":");
   }
 
   public void main() {

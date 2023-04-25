@@ -34,7 +34,7 @@ Puedes ir probando que el código se genera correctamente ejecutando:
 bin\xana.bat examples/codegeneration/simple.xana -a
 ```
 
-Para el fichero [`codegeneration/simple.xana`](../../examples/codegeneration/simple.xana) el resultado debería ser el contenido del fichero [`codegeneration/simple.xana.mp`](../../examples/codegeneration/simple.xana.mp).
+Para el fichero [`codegeneration/simple.xana`](../../examples/codegeneration/simple.xana) el resultado debería ser el contenido del fichero [`codegeneration/simple.xana.mp`](../../examples/codegeneration/simple-sol.xana.mp).
 
 > **Nota:** Ten cuidado, porque si no te fijas bien, puedes sobreescribir el fichero `codegeneration/simple.xana.mp`.
 > Antes de hacer commit, revisa bien que no haces cambios en ese fichero.
