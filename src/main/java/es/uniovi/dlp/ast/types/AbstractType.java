@@ -19,6 +19,9 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   }
 
   @Override
+  public String toInt() { return " ERROR: NOT SUPPORTED"; }
+
+  @Override
   public Type arithmetic(Type type) {
     return null;
   }

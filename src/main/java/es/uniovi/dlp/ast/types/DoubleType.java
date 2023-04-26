@@ -48,6 +48,11 @@ public class DoubleType extends AbstractType {
   }
 
   @Override
+  public String toInt() {
+    return "";
+  }
+
+  @Override
   public Type assign(Type type) {
     if (type instanceof DoubleType) {
       return this;

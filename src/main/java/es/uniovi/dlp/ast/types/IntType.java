@@ -106,4 +106,9 @@ public class IntType extends AbstractType {
     if (type instanceof DoubleType) return "i2f";
     return " ERROR: NOT SUPPORTED ";
   }
+
+  @Override
+  public String toInt() {
+    return "";
+  }
 }

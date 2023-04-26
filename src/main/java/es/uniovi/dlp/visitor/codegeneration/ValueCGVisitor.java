@@ -68,4 +68,54 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
 
     return null;
   }
+
+  @Override
+  public Type visit(BooleanOperation booleanOperation, Type param) {
+    booleanOperation.getLeftExpression().accept(this, param);
+    booleanOperation.getRightExpression().accept(this, param);
+
+    switch (booleanOperation.getOp()) {
+      case "&&" -> cg.and();
+      case "||" -> cg.or();
+    }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(BooleanNot booleanNot, Type param) {
+    booleanNot.getExpression().accept(this, param);
+    if (!booleanNot.getExpression().getType().toInt().isEmpty())
+      cg.writeInstruction(booleanNot.getExpression().getType().toInt());
+    cg.not();
+
+    return null;
+  }
+
+
+  @Override
+  public Type visit(ComparisonOperation comparisonOperation, Type param) {
+    Type leftType = comparisonOperation.getLeftExpression().getType();
+    Type rightType = comparisonOperation.getRightExpression().getType();
+
+    comparisonOperation.getLeftExpression().accept(this, param);
+    // Si es char, lo convertimos a int para poder hacer la comparación
+    if (!leftType.toInt().isEmpty())
+      cg.writeInstruction(leftType.toInt());
+
+    comparisonOperation.getRightExpression().accept(this, param);
+    if (!rightType.toInt().isEmpty())
+      cg.writeInstruction(rightType.toInt());
+
+    switch (comparisonOperation.getOp()) {
+      case ">" -> cg.greater(rightType);
+      case ">=" -> cg.greaterOrEquals(rightType);
+      case "<" -> cg.lesser(rightType);
+      case "<=" -> cg.lesserOrEquals(rightType);
+      case "==" -> cg.equals(rightType);
+      case "!=" -> cg.notEquals(rightType);
+    }
+
+    return null;
+  }
 }

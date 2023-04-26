@@ -9,6 +9,8 @@ public interface Type extends ASTNode {
 
   String convert(Type type);
 
+  String toInt();
+
   Type negative();
 
   Type booleanNot();

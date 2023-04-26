@@ -6,6 +6,7 @@ import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.statements.Assignment;
 import es.uniovi.dlp.ast.statements.Read;
 import es.uniovi.dlp.ast.statements.Write;
+import es.uniovi.dlp.ast.types.FuncType;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.io.OutputStreamWriter;
@@ -85,9 +86,17 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-  //  @Override
-  //  public Type visit(FunctionDefinition functionDefinition, Type param) {
-  //
-  //    return null;
-  //  }
+  @Override
+  public Type visit(FunctionDefinition functionDefinition, Type param) {
+    cg.newLine(functionDefinition.getLine());
+
+    FuncType type = (FuncType) functionDefinition.getType();
+    cg.comment("Parameters");
+    type.getParams().forEach(p -> p.accept(this, param));
+
+    cg.comment("Local variables");
+    functionDefinition.getVarDefinitions().forEach(v -> v.accept(this, param));
+
+    return null;
+  }
 }

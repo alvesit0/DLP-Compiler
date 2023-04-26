@@ -134,4 +134,56 @@ public class CodeGenerator {
   public void cast(Type left, Type type) {
     writeInstruction(left.convert(type));
   }
+
+  public void and() {
+    writeInstruction("and");
+  }
+
+  public void or() {
+    writeInstruction("or");
+  }
+
+  public void not() { writeInstruction("not"); }
+
+  public void greater(Type type) {
+    if (type.getSuffix().equals("b"))
+      writeInstruction("gti");
+    else
+      writeInstruction("gt" + type.getSuffix());
+  }
+
+  public void lesser(Type type) {
+    if (type.getSuffix().equals("b"))
+      writeInstruction("lti");
+    else
+      writeInstruction("lt" + type.getSuffix());
+  }
+
+  public void greaterOrEquals(Type type) {
+    if (type.getSuffix().equals("b"))
+      writeInstruction("gei");
+    else
+      writeInstruction("ge" + type.getSuffix());
+  }
+
+  public void lesserOrEquals(Type type) {
+    if (type.getSuffix().equals("b"))
+      writeInstruction("lei");
+    else
+      writeInstruction("le" + type.getSuffix());
+  }
+
+  public void equals(Type type) {
+    if (type.getSuffix().equals("b"))
+      writeInstruction("eqi");
+    else
+      writeInstruction("eq" + type.getSuffix());
+  }
+
+  public void notEquals(Type type) {
+    if (type.getSuffix().equals("b"))
+      writeInstruction("nei");
+    else
+      writeInstruction("ne" + type.getSuffix());
+  }
 }

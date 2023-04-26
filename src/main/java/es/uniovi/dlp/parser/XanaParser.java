@@ -1705,7 +1705,7 @@ public class XanaParser extends Parser {
                     ((ExpressionContext) _localctx).expr2 =
                         ((ExpressionContext) _localctx).expression = expression(5);
                     ((ExpressionContext) _localctx).ast =
-                        new ComparisonOperation(
+                        new BooleanOperation(
                             ((ExpressionContext) _localctx).op.getLine(),
                             ((ExpressionContext) _localctx).op.getCharPositionInLine() + 1,
                             (((ExpressionContext) _localctx).op != null
@@ -1737,7 +1737,7 @@ public class XanaParser extends Parser {
                     ((ExpressionContext) _localctx).expr2 =
                         ((ExpressionContext) _localctx).expression = expression(4);
                     ((ExpressionContext) _localctx).ast =
-                        new BooleanOperation(
+                        new ComparisonOperation(
                             ((ExpressionContext) _localctx).op.getLine(),
                             ((ExpressionContext) _localctx).op.getCharPositionInLine() + 1,
                             (((ExpressionContext) _localctx).op != null

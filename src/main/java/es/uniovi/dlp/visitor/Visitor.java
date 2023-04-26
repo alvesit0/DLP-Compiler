@@ -16,13 +16,13 @@ public interface Visitor<ReturnType, ParamType> {
 
   ReturnType visit(BooleanNot booleanNot, ParamType param);
 
-  ReturnType visit(BooleanOperation booleanOperation, ParamType param);
+  ReturnType visit(ComparisonOperation comparisonOperation, ParamType param);
 
   ReturnType visit(Cast cast, ParamType param);
 
   ReturnType visit(CharLiteral charLiteral, ParamType param);
 
-  ReturnType visit(ComparisonOperation comparisonOperation, ParamType param);
+  ReturnType visit(BooleanOperation booleanOperation, ParamType param);
 
   ReturnType visit(DoubleLiteral doubleLiteral, ParamType param);
 

@@ -36,9 +36,9 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   }
 
   @Override
-  public ReturnType visit(BooleanOperation booleanOperation, ParamType param) {
-    booleanOperation.getLeftExpression().accept(this, param);
-    booleanOperation.getRightExpression().accept(this, param);
+  public ReturnType visit(ComparisonOperation comparisonOperation, ParamType param) {
+    comparisonOperation.getLeftExpression().accept(this, param);
+    comparisonOperation.getRightExpression().accept(this, param);
 
     return null;
   }
@@ -57,9 +57,9 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   }
 
   @Override
-  public ReturnType visit(ComparisonOperation comparisonOperation, ParamType param) {
-    comparisonOperation.getLeftExpression().accept(this, param);
-    comparisonOperation.getRightExpression().accept(this, param);
+  public ReturnType visit(BooleanOperation booleanOperation, ParamType param) {
+    booleanOperation.getLeftExpression().accept(this, param);
+    booleanOperation.getRightExpression().accept(this, param);
 
     return null;
   }

@@ -272,35 +272,13 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(BooleanOperation booleanOperation, Type param) {
-    super.visit(booleanOperation, param);
-    booleanOperation.setLValue(false);
-    Type leftType = booleanOperation.getLeftExpression().getType();
-    Type rightType = booleanOperation.getRightExpression().getType();
-
-    booleanOperation.setType(leftType.comparison(rightType));
-
-    if (booleanOperation.getType() == null) {
-      booleanOperation.setType(ErrorType.getInstance());
-      ErrorManager.getInstance()
-          .addError(
-              booleanOperation.getLine(),
-              booleanOperation.getColumn(),
-              ErrorReason.INVALID_COMPARISON);
-    }
-
-    return null;
-  }
-
-  @Override
   public Type visit(ComparisonOperation comparisonOperation, Type param) {
     super.visit(comparisonOperation, param);
     comparisonOperation.setLValue(false);
-
     Type leftType = comparisonOperation.getLeftExpression().getType();
     Type rightType = comparisonOperation.getRightExpression().getType();
 
-    comparisonOperation.setType(leftType.logical(rightType));
+    comparisonOperation.setType(leftType.comparison(rightType));
 
     if (comparisonOperation.getType() == null) {
       comparisonOperation.setType(ErrorType.getInstance());
@@ -308,6 +286,28 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
           .addError(
               comparisonOperation.getLine(),
               comparisonOperation.getColumn(),
+              ErrorReason.INVALID_COMPARISON);
+    }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(BooleanOperation booleanOperation, Type param) {
+    super.visit(booleanOperation, param);
+    booleanOperation.setLValue(false);
+
+    Type leftType = booleanOperation.getLeftExpression().getType();
+    Type rightType = booleanOperation.getRightExpression().getType();
+
+    booleanOperation.setType(leftType.logical(rightType));
+
+    if (booleanOperation.getType() == null) {
+      booleanOperation.setType(ErrorType.getInstance());
+      ErrorManager.getInstance()
+          .addError(
+              booleanOperation.getLine(),
+              booleanOperation.getColumn(),
               ErrorReason.INVALID_LOGICAL);
     }
 
