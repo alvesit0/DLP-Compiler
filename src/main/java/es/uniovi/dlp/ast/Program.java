@@ -17,10 +17,6 @@ public class Program implements ASTNode {
     this.definitionList = definitionList;
   }
 
-  public List<Definition> getDefinitionList() {
-    return definitionList;
-  }
-
   @Override
   public int getLine() {
     return line;

@@ -14,6 +14,19 @@ public class DoubleType extends AbstractType {
   }
 
   @Override
+  public String getSuffix() {
+    return "f";
+  }
+
+  @Override
+  public String convert(Type type) {
+    if (type instanceof IntType) return "f2i";
+    if (type instanceof CharType) return "f2i\n\ti2b";
+    if (type instanceof DoubleType) return "";
+    return " ERROR: NOT SUPPORTED ";
+  }
+
+  @Override
   public Type arithmetic(Type type) {
     if (type instanceof CharType || type instanceof IntType || type instanceof DoubleType) {
       return this;

@@ -19,7 +19,7 @@ public class Compiler {
   private Program program;
   private boolean reportErrors = true;
 
-  private boolean showDebug = false;
+  private boolean showDebug = true;
 
   private OutputStreamWriter out;
 
@@ -41,7 +41,10 @@ public class Compiler {
     checkErrors();
 
     assignOffsets();
-    if (this.out != null) generateCode();
+    if (this.out != null) {
+      generateCode();
+      this.out.close();
+    }
   }
 
   private void checkErrors() {

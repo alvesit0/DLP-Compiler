@@ -9,6 +9,16 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
   }
 
   @Override
+  public String getSuffix() {
+    return " ERROR: NOT IMPLEMENTED ";
+  }
+
+  @Override
+  public String convert(Type type) {
+    return " ERROR: NOT SUPPORTED ";
+  }
+
+  @Override
   public Type arithmetic(Type type) {
     return null;
   }

@@ -16,7 +16,14 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(Variable v, Type param) {
     VarDefinition varDefinition = (VarDefinition) v.getDefinition();
-    cg.writeInstruction("pusha\t" + varDefinition.getOffset());
+    // Si es variable global
+    if (varDefinition.getOffset() == 0) cg.pusha(varDefinition.getOffset());
+    // Si es local
+    else {
+      cg.pushBP();
+      cg.pushValue(varDefinition.getType(), varDefinition.getOffset() + "");
+      cg.add(varDefinition.getType());
+    }
     return null;
   }
 }

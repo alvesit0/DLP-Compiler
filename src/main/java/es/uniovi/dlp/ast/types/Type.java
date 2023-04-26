@@ -5,6 +5,10 @@ import es.uniovi.dlp.ast.ASTNode;
 public interface Type extends ASTNode {
   Type arithmetic(Type type);
 
+  String getSuffix();
+
+  String convert(Type type);
+
   Type negative();
 
   Type booleanNot();

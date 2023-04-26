@@ -93,4 +93,17 @@ public class IntType extends AbstractType {
   public int getNumberOfBytes() {
     return 2;
   }
+
+  @Override
+  public String getSuffix() {
+    return "i";
+  }
+
+  @Override
+  public String convert(Type type) {
+    if (type instanceof IntType) return "";
+    if (type instanceof CharType) return "i2b";
+    if (type instanceof DoubleType) return "i2f";
+    return " ERROR: NOT SUPPORTED ";
+  }
 }

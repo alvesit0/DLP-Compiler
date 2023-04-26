@@ -1,5 +1,6 @@
 package es.uniovi.dlp.visitor.codegeneration;
 
+import es.uniovi.dlp.ast.types.Type;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
@@ -9,6 +10,7 @@ public class CodeGenerator {
   private String filename;
   private OutputStreamWriter out;
 
+  private int currentLine = 0;
   private int lastLabelId = 0;
 
   public CodeGenerator(String filename, boolean showDebug, OutputStreamWriter out) {
@@ -22,10 +24,6 @@ public class CodeGenerator {
     }
   }
 
-  private void writePragma(String string) {
-    write("#" + string);
-  }
-
   public void comment(String comment) {
     if (showDebug) {
       writeInstruction("' " + comment);
@@ -33,7 +31,10 @@ public class CodeGenerator {
   }
 
   public void newLine(int number) {
-    write("\n#line " + number);
+    if (number > currentLine) {
+      write("\n#line " + number);
+      currentLine = number;
+    }
   }
 
   public void allocateLabels(int howMany) {
@@ -47,6 +48,8 @@ public class CodeGenerator {
   public void label(int id) {
     label("label" + id);
   }
+
+  public void assignment() {}
 
   public void label(String label) {
     writeInstruction(label + ":");
@@ -66,9 +69,69 @@ public class CodeGenerator {
 
   public void write(String text) {
     try {
-      this.out.write(text);
+      this.out.write("\n" + text);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void store(Type type) {
+    writeInstruction("store" + type.getSuffix());
+  }
+
+  public void load(Type type) {
+    writeInstruction("load" + type.getSuffix());
+  }
+
+  public void pushValue(Type type, String value) {
+    writeInstruction("push" + type.getSuffix() + "\t" + value);
+  }
+
+  public void pusha(int dir) {
+    writeInstruction("pusha\t" + dir);
+  }
+
+  public void pushBP() {
+    writeInstruction("push\tbp");
+  }
+
+  public void pop(Type type) {
+    writeInstruction("pop" + type.getSuffix());
+  }
+
+  public void dup(Type type) {
+    writeInstruction("dup" + type.getSuffix());
+  }
+
+  public void add(Type type) {
+    writeInstruction("add" + type.getSuffix());
+  }
+
+  public void sub(Type type) {
+    writeInstruction("sub" + type.getSuffix());
+  }
+
+  public void mul(Type type) {
+    writeInstruction("mul" + type.getSuffix());
+  }
+
+  public void div(Type type) {
+    writeInstruction("div" + type.getSuffix());
+  }
+
+  public void mod(Type type) {
+    writeInstruction("mod" + type.getSuffix());
+  }
+
+  public void out(Type type) {
+    writeInstruction("out" + type.getSuffix());
+  }
+
+  public void in(Type type) {
+    writeInstruction("in" + type.getSuffix());
+  }
+
+  public void cast(Type left, Type type) {
+    writeInstruction(left.convert(type));
   }
 }

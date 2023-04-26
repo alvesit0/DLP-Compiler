@@ -17,6 +17,11 @@ public class CharLiteral extends AbstractExpression {
   }
 
   @Override
+  public String toString() {
+    return "CharLiteral{" + "value=" + value + '}';
+  }
+
+  @Override
   public <ReturnType, ParamType> ReturnType accept(
       AbstractVisitor<ReturnType, ParamType> visitor, ParamType param) {
     return visitor.visit(this, param);
