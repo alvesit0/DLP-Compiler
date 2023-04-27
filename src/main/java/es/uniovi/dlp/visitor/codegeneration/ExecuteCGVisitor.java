@@ -48,6 +48,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     cg.newLine(assignment.getLeftExpression().getLine());
     assignment.getLeftExpression().accept(addressVisitor, param);
     assignment.getRightExpression().accept(valueVisitor, param);
+    cg.writeInstruction(assignment.getRightExpression().getType().convert(assignment.getLeftExpression().getType()));
     cg.store(assignment.getLeftExpression().getType());
     return null;
   }

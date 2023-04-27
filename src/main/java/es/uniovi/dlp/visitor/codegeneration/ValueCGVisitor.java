@@ -122,7 +122,7 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(ArrayAccess arrayAccess, Type param) {
     arrayAccess.accept(addressVisitor, param);
-    cg.load(new IntType(arrayAccess.getLine(), arrayAccess.getColumn()));
+    cg.load(arrayAccess.getType());
 
     return null;
   }

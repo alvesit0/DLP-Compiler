@@ -58,7 +58,7 @@ public class DoubleType extends AbstractType {
       return this;
     }
     if (type instanceof IntType) {
-      return new IntType(getLine(), getColumn());
+      return this;
     }
     if (type instanceof CharType) {
       return new CharType(getLine(), getColumn());

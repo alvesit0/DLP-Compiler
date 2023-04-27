@@ -61,28 +61,32 @@ label0:
 
 #line 12
 	push	bp
-	pushf	-80
-	addf
+	pushi	-80
+	addi
 	push	bp
 	pushi	-82
 	addi
 	loadi
 	pushi	5
 	modi
-	push	bp
-	pushi	-82
-	addi
-	loadi
-	pushi	5
-	divi
-	pushi	2
+	pushi	12
 	muli
 	addi
 	push	bp
 	pushi	-82
 	addi
 	loadi
-	storei
+	pushi	5
+	divi
+	pushi	4
+	muli
+	addi
+	push	bp
+	pushi	-82
+	addi
+	loadi
+	i2f
+	storef
 
 #line 13
 	push	bp
@@ -146,24 +150,27 @@ label5:
 #line 21
 	' Write
 	push	bp
-	pushf	-80
-	addf
+	pushi	-80
+	addi
 	push	bp
 	pushi	-82
 	addi
 	loadi
 	pushi	5
 	modi
+	pushi	12
+	muli
+	addi
 	push	bp
 	pushi	-82
 	addi
 	loadi
 	pushi	5
 	divi
-	pushi	2
+	pushi	4
 	muli
 	addi
-	loadi
+	loadf
 	outf
 	' Write
 	pushb	9

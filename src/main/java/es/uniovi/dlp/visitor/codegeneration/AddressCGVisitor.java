@@ -27,13 +27,14 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(Variable v, Type param) {
     VarDefinition varDefinition = (VarDefinition) v.getDefinition();
+    Type intType = new IntType(varDefinition.getLine(), varDefinition.getColumn());
     // Si es variable global
     if (varDefinition.getScope() == 0) cg.pusha(varDefinition.getOffset());
     // Si es local
     else {
       cg.pushBP();
-      cg.pushValue(varDefinition.getType(), varDefinition.getOffset() + "");
-      cg.add(varDefinition.getType());
+      cg.pushValue(intType, varDefinition.getOffset() + "");
+      cg.add(intType);
     }
     return null;
   }
@@ -47,8 +48,6 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
       index.accept(valueVisitor, param);
       Type aux = type.getTypeAtIndex(i - 1);
 
-      // 12 -> Almacena 3 doubles
-      // 4 -> Almacena 1 double
       if (aux instanceof Array)
         cg.pushValue(index.getType(), type.getArrayType().getNumberOfBytes() * ((Array)aux).getSize() + "");
       else

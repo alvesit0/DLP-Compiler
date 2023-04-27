@@ -62,7 +62,7 @@ public class Array extends AbstractType {
   @Override
   public Type indexing(Type type) {
     if (type instanceof ErrorType) return type;
-    if (type instanceof IntType) return this.getType();
+    if (type instanceof IntType) return getArrayType();
     return super.indexing(type);
   }
 
