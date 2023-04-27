@@ -31,6 +31,14 @@ public class Array extends AbstractType {
     return result;
   }
 
+  public Type getTypeAtIndex(int i) {
+    Type result = this;
+    for (int j = 0; j <= i; j++) {
+      result = ((Array) result).getType();
+    }
+    return result;
+  }
+
   @Override
   public String getSuffix() {
     return getArrayType().getSuffix();

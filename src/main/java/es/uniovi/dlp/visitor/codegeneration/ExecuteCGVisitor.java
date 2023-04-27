@@ -19,6 +19,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     cg = new CodeGenerator(filename, showDebug, out);
     addressVisitor = new AddressCGVisitor(cg);
     valueVisitor = new ValueCGVisitor(cg, addressVisitor);
+    addressVisitor.setValueVisitor(valueVisitor);
   }
 
   public Type visit(Program program, Type param) {

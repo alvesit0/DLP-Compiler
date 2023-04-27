@@ -1,6 +1,7 @@
 package es.uniovi.dlp.visitor.codegeneration;
 
 import es.uniovi.dlp.ast.expressions.*;
+import es.uniovi.dlp.ast.types.IntType;
 import es.uniovi.dlp.ast.types.Struct;
 import es.uniovi.dlp.ast.types.StructField;
 import es.uniovi.dlp.ast.types.Type;
@@ -121,7 +122,7 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(ArrayAccess arrayAccess, Type param) {
     arrayAccess.accept(addressVisitor, param);
-    cg.load(arrayAccess.getIndexes().get(0).getType());
+    cg.load(new IntType(arrayAccess.getLine(), arrayAccess.getColumn()));
 
     return null;
   }

@@ -2,6 +2,7 @@ package es.uniovi.dlp.visitor.codegeneration;
 
 import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.ArrayAccess;
+import es.uniovi.dlp.ast.expressions.Expression;
 import es.uniovi.dlp.ast.expressions.StructAccess;
 import es.uniovi.dlp.ast.expressions.Variable;
 import es.uniovi.dlp.ast.types.Array;
@@ -13,9 +14,14 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
 
   private CodeGenerator cg;
+  private ValueCGVisitor valueVisitor;
 
   public AddressCGVisitor(CodeGenerator cg) {
     this.cg = cg;
+  }
+
+  public void setValueVisitor(ValueCGVisitor valueVisitor) {
+    this.valueVisitor = valueVisitor;
   }
 
   @Override
@@ -35,12 +41,22 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
   @Override
   public Type visit(ArrayAccess arrayAccess, Type param) {
     arrayAccess.getArray().accept(this, param);
-    arrayAccess.getIndexes().forEach(i -> i.accept(this, param));
-    Type indexType = new IntType(arrayAccess.getLine(), arrayAccess.getColumn());
+    Array type = (Array) arrayAccess.getArray().getType();
+    for (int i = 1; i < arrayAccess.getIndexes().size() + 1; i++) {
+      Expression index = arrayAccess.getIndexes().get(i - 1);
+      index.accept(valueVisitor, param);
+      Type aux = type.getTypeAtIndex(i - 1);
 
-    cg.pushValue(indexType, indexType.getNumberOfBytes() + "");
-    cg.mul(indexType);
-    cg.add(indexType);
+      // 12 -> Almacena 3 doubles
+      // 4 -> Almacena 1 double
+      if (aux instanceof Array)
+        cg.pushValue(index.getType(), type.getArrayType().getNumberOfBytes() * ((Array)aux).getSize() + "");
+      else
+        cg.pushValue(index.getType(), type.getArrayType().getNumberOfBytes() + "");
+
+      cg.mul(index.getType());
+      cg.add(index.getType());
+    }
 
     return null;
   }
@@ -55,6 +71,4 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
 
     return null;
   }
-
-
 }
