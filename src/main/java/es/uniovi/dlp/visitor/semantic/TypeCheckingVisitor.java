@@ -249,7 +249,17 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
     super.visit(arrayAccess, param);
     arrayAccess.setLValue(true);
 
-    boolean correctIndexAmmount = arrayAccess.getIndexes().size() == 1;
+    int dimension = 0;
+    Type arrayToCheck = arrayAccess.getArray().getType();
+    while (true) {
+      if (arrayToCheck instanceof Array) {
+        dimension++;
+        arrayToCheck = ((Array) arrayToCheck).getType();
+      }
+      else break;
+    }
+
+    boolean correctIndexAmmount = arrayAccess.getIndexes().size() == dimension;
 
     if (!arrayAccess.getArray().getType().isIndexable() || !correctIndexAmmount) {
       arrayAccess.setType(ErrorType.getInstance());
@@ -257,7 +267,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
           .addError(arrayAccess.getLine(), arrayAccess.getColumn(), ErrorReason.INVALID_INDEXING);
     } else
       arrayAccess.setType(
-          arrayAccess.getArray().getType().indexing(arrayAccess.getIndexes().get(0).getType()));
+          arrayAccess.getArray().getType().indexing(arrayAccess.getIndexes().get(dimension - 1).getType()));
 
     if (arrayAccess.getType() == null) {
       arrayAccess.setType(ErrorType.getInstance());

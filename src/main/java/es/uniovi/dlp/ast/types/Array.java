@@ -21,6 +21,21 @@ public class Array extends AbstractType {
     return type;
   }
 
+  public Type getArrayType() {
+    Type result = this.type;
+    while(true) {
+      if (result instanceof Array)
+        result = ((Array) result).getType();
+      else break;
+    }
+    return result;
+  }
+
+  @Override
+  public String getSuffix() {
+    return getArrayType().getSuffix();
+  }
+
   @Override
   public String toString() {
     return "array";
@@ -41,6 +56,14 @@ public class Array extends AbstractType {
     if (type instanceof ErrorType) return type;
     if (type instanceof IntType) return this.getType();
     return super.indexing(type);
+  }
+
+  @Override
+  public Type assign(Type type) {
+    if (type instanceof IntType) return new IntType(getLine(), getColumn());
+    if (type instanceof DoubleType) return new DoubleType(getLine(), getColumn());
+    if (type instanceof CharType) return new CharType(getLine(), getColumn());
+    return super.assign(type);
   }
 
   @Override

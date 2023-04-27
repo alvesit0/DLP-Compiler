@@ -1,6 +1,8 @@
 package es.uniovi.dlp.visitor.codegeneration;
 
 import es.uniovi.dlp.ast.expressions.*;
+import es.uniovi.dlp.ast.types.Struct;
+import es.uniovi.dlp.ast.types.StructField;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
@@ -112,6 +114,22 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
       case "==" -> cg.equals(rightType);
       case "!=" -> cg.notEquals(rightType);
     }
+
+    return null;
+  }
+
+  @Override
+  public Type visit(ArrayAccess arrayAccess, Type param) {
+    arrayAccess.accept(addressVisitor, param);
+    cg.load(arrayAccess.getIndexes().get(0).getType());
+
+    return null;
+  }
+
+  @Override
+  public Type visit(StructAccess structAccess, Type param) {
+    structAccess.accept(addressVisitor, param);
+    cg.load(structAccess.getStruct().getType());
 
     return null;
   }

@@ -3,9 +3,7 @@ package es.uniovi.dlp.visitor.codegeneration;
 import es.uniovi.dlp.ast.Program;
 import es.uniovi.dlp.ast.definitions.FunctionDefinition;
 import es.uniovi.dlp.ast.definitions.VarDefinition;
-import es.uniovi.dlp.ast.statements.Assignment;
-import es.uniovi.dlp.ast.statements.Read;
-import es.uniovi.dlp.ast.statements.Write;
+import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.FuncType;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.visitor.AbstractVisitor;
@@ -119,6 +117,51 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     functionDefinition.getStatements().forEach(s -> s.accept(this, param));
 
     cg.ret(returnBytes, localBytes, argumentsBytes);
+
+    return null;
+  }
+
+  @Override
+  public Type visit(If ifStatement, Type param) {
+    cg.newLine(ifStatement.getCondition().getLine());
+    cg.comment("If statement");
+
+    // Alojamos labels de else y de salida
+    cg.allocateLabels(2);
+    String elseLabel = "label" + (cg.getLastLabelId() - 1);
+    String exit = "label" + cg.getLastLabelId();
+
+    ifStatement.getCondition().accept(valueVisitor, param);
+    // Si no se cumple la condición, saltar a elseLabel
+    cg.jz(elseLabel);
+    cg.comment("Body of the if branch");
+    ifStatement.getIfBody().forEach(s -> s.accept(this, param));
+    cg.jmp(exit);
+    cg.label(elseLabel);
+    cg.comment("Body of the else branch");
+    ifStatement.getElseBody().forEach(s -> s.accept(this, param));
+    cg.label(exit);
+
+    return null;
+  }
+
+  @Override
+  public Type visit(While whileStatement, Type param) {
+    cg.newLine(whileStatement.getCondition().getLine());
+    cg.comment("While statement");
+
+    // Alojamos labels de entrada y de salida
+    cg.allocateLabels(2);
+    String condition = "label" + (cg.getLastLabelId() - 1);
+    String exit = "label" + cg.getLastLabelId();
+
+    cg.label(condition);
+    whileStatement.getCondition().accept(valueVisitor, param);
+    cg.jz(exit);
+    cg.comment("Body of the while statement");
+    whileStatement.getBody().forEach(s -> s.accept(this, param));
+    cg.jmp(condition);
+    cg.label(exit);
 
     return null;
   }

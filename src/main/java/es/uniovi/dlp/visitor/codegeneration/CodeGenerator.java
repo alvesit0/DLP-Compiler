@@ -11,7 +11,7 @@ public class CodeGenerator {
   private OutputStreamWriter out;
 
   private int currentLine = 0;
-  private int lastLabelId = 0;
+  private int lastLabelId = -1;
 
   public CodeGenerator(String filename, boolean showDebug, OutputStreamWriter out) {
     this.showDebug = showDebug;
@@ -44,10 +44,6 @@ public class CodeGenerator {
 
   public int getLastLabelId() {
     return lastLabelId;
-  }
-
-  public void label(int id) {
-    label("label" + id);
   }
 
   public void assignment() {}
@@ -188,5 +184,17 @@ public class CodeGenerator {
 
   public void call(String id) {
     writeInstruction("call" + "\t" + id);
+  }
+
+  public void jmp(String label) {
+    writeInstruction("jmp" + "\t" + label);
+  }
+
+  public void jz(String label) {
+    writeInstruction("jz" + "\t" + label);
+  }
+
+  public void jnz(String label) {
+    writeInstruction("jnz" + "\t" + label);
   }
 }

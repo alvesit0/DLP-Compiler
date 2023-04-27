@@ -16,6 +16,13 @@ public class Struct extends AbstractType {
     return fields;
   }
 
+  public StructField getField(String name) {
+    for (StructField structField : fields)
+      if (structField.getName().equals(name))
+        return structField;
+    return null;
+  }
+
   @Override
   public int getLine() {
     return 0;
