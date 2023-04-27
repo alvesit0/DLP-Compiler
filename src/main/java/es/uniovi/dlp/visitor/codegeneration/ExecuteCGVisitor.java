@@ -91,11 +91,34 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     cg.newLine(functionDefinition.getLine());
 
     FuncType type = (FuncType) functionDefinition.getType();
+
+    cg.label(functionDefinition.getName());
     cg.comment("Parameters");
     type.getParams().forEach(p -> p.accept(this, param));
 
     cg.comment("Local variables");
     functionDefinition.getVarDefinitions().forEach(v -> v.accept(this, param));
+
+    // El tamaño de la función será el valor absoluto del offset del último elemento de la lista de
+    // definiciones
+    int localBytes =
+        functionDefinition.getVarDefinitions().size() > 0
+            ? -functionDefinition
+                .getVarDefinitions()
+                .get(functionDefinition.getVarDefinitions().size() - 1)
+                .getOffset()
+            : 0;
+
+    cg.enter(localBytes);
+
+    int argumentsBytes = 0;
+    for (VarDefinition varDefinition : type.getParams())
+      argumentsBytes += varDefinition.getType().getNumberOfBytes();
+    int returnBytes = type.getReturnType().getNumberOfBytes();
+
+    functionDefinition.getStatements().forEach(s -> s.accept(this, param));
+
+    cg.ret(returnBytes, localBytes, argumentsBytes);
 
     return null;
   }

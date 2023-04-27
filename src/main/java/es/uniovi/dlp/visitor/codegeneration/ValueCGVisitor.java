@@ -92,7 +92,6 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-
   @Override
   public Type visit(ComparisonOperation comparisonOperation, Type param) {
     Type leftType = comparisonOperation.getLeftExpression().getType();
@@ -100,12 +99,10 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
 
     comparisonOperation.getLeftExpression().accept(this, param);
     // Si es char, lo convertimos a int para poder hacer la comparación
-    if (!leftType.toInt().isEmpty())
-      cg.writeInstruction(leftType.toInt());
+    if (!leftType.toInt().isEmpty()) cg.writeInstruction(leftType.toInt());
 
     comparisonOperation.getRightExpression().accept(this, param);
-    if (!rightType.toInt().isEmpty())
-      cg.writeInstruction(rightType.toInt());
+    if (!rightType.toInt().isEmpty()) cg.writeInstruction(rightType.toInt());
 
     switch (comparisonOperation.getOp()) {
       case ">" -> cg.greater(rightType);

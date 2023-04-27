@@ -17,7 +17,7 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
   public Type visit(Variable v, Type param) {
     VarDefinition varDefinition = (VarDefinition) v.getDefinition();
     // Si es variable global
-    if (varDefinition.getOffset() == 0) cg.pusha(varDefinition.getOffset());
+    if (varDefinition.getScope() == 0) cg.pusha(varDefinition.getOffset());
     // Si es local
     else {
       cg.pushBP();

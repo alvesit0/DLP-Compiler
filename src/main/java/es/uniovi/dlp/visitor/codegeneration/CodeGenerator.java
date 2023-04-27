@@ -18,7 +18,8 @@ public class CodeGenerator {
     this.filename = filename;
     this.out = out;
     try {
-      this.out.write("#source \"" + filename + "\"");
+      String[] formattedName = filename.split("/");
+      this.out.write("#source \"" + formattedName[formattedName.length - 1] + "\"");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -52,7 +53,7 @@ public class CodeGenerator {
   public void assignment() {}
 
   public void label(String label) {
-    writeInstruction(label + ":");
+    write("\n" + label + ":");
   }
 
   public void main() {
@@ -64,7 +65,7 @@ public class CodeGenerator {
   }
 
   public void writeInstruction(String text) {
-    write("\t" + text);
+    if (!text.isEmpty()) write("\t" + text);
   }
 
   public void write(String text) {
@@ -143,47 +144,49 @@ public class CodeGenerator {
     writeInstruction("or");
   }
 
-  public void not() { writeInstruction("not"); }
+  public void not() {
+    writeInstruction("not");
+  }
 
   public void greater(Type type) {
-    if (type.getSuffix().equals("b"))
-      writeInstruction("gti");
-    else
-      writeInstruction("gt" + type.getSuffix());
+    if (type.getSuffix().equals("b")) writeInstruction("gti");
+    else writeInstruction("gt" + type.getSuffix());
   }
 
   public void lesser(Type type) {
-    if (type.getSuffix().equals("b"))
-      writeInstruction("lti");
-    else
-      writeInstruction("lt" + type.getSuffix());
+    if (type.getSuffix().equals("b")) writeInstruction("lti");
+    else writeInstruction("lt" + type.getSuffix());
   }
 
   public void greaterOrEquals(Type type) {
-    if (type.getSuffix().equals("b"))
-      writeInstruction("gei");
-    else
-      writeInstruction("ge" + type.getSuffix());
+    if (type.getSuffix().equals("b")) writeInstruction("gei");
+    else writeInstruction("ge" + type.getSuffix());
   }
 
   public void lesserOrEquals(Type type) {
-    if (type.getSuffix().equals("b"))
-      writeInstruction("lei");
-    else
-      writeInstruction("le" + type.getSuffix());
+    if (type.getSuffix().equals("b")) writeInstruction("lei");
+    else writeInstruction("le" + type.getSuffix());
   }
 
   public void equals(Type type) {
-    if (type.getSuffix().equals("b"))
-      writeInstruction("eqi");
-    else
-      writeInstruction("eq" + type.getSuffix());
+    if (type.getSuffix().equals("b")) writeInstruction("eqi");
+    else writeInstruction("eq" + type.getSuffix());
   }
 
   public void notEquals(Type type) {
-    if (type.getSuffix().equals("b"))
-      writeInstruction("nei");
-    else
-      writeInstruction("ne" + type.getSuffix());
+    if (type.getSuffix().equals("b")) writeInstruction("nei");
+    else writeInstruction("ne" + type.getSuffix());
+  }
+
+  public void enter(int dir) {
+    writeInstruction("enter" + "\t" + dir);
+  }
+
+  public void ret(int returnBytes, int localBytes, int argumentsBytes) {
+    writeInstruction("ret" + "\t" + returnBytes + ", " + localBytes + ", " + argumentsBytes);
+  }
+
+  public void call(String id) {
+    writeInstruction("call" + "\t" + id);
   }
 }
