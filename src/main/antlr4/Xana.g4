@@ -128,11 +128,9 @@ expression returns [Expression ast]
             | charconst=CHAR_CONSTANT {$ast = new CharLiteral($charconst.getLine(), $charconst.getCharPositionInLine() + 1, LexerHelper.lexemeToChar($charconst.text));}
             | realconst=REAL_CONSTANT {$ast = new DoubleLiteral($realconst.getLine(), $realconst.getCharPositionInLine() + 1, LexerHelper.lexemeToReal($realconst.text));}
             | expr=expression'.'attribute=ID {$ast = new StructAccess($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $attribute.text);}
-            | array=expression'['indexes+=expression']'('['indexes+=expression']')*
+            | array=expression'['index=expression']'
                 {
-                    List<Expression> aux = new ArrayList<Expression>();
-                    $indexes.forEach(e -> aux.add(e.ast));
-                    $ast = new ArrayAccess($array.ast.getLine(), $array.ast.getColumn(), $array.ast, aux);
+                    $ast = new ArrayAccess($array.ast.getLine(), $array.ast.getColumn(), $array.ast, $index.ast);
                 }
             | expr=expression 'as' type {$ast = new Cast($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $type.ast);}
             | function_invocation {$ast = $function_invocation.ast;}

@@ -7,18 +7,20 @@ public class ArrayAccess extends AbstractExpression {
   private Expression array;
   private List<Expression> indexes;
 
-  public ArrayAccess(int line, int column, Expression array, List<Expression> indexes) {
+  private Expression index; // TODO
+
+  public ArrayAccess(int line, int column, Expression array, Expression index) {
     super(line, column);
     this.array = array;
-    this.indexes = indexes;
+    this.index = index;
   }
 
   public Expression getArray() {
     return array;
   }
 
-  public List<Expression> getIndexes() {
-    return indexes;
+  public Expression getIndex() {
+    return index;
   }
 
   @Override

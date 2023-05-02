@@ -23,18 +23,9 @@ public class Array extends AbstractType {
 
   public Type getArrayType() {
     Type result = this.type;
-    while(true) {
-      if (result instanceof Array)
-        result = ((Array) result).getType();
+    while (true) {
+      if (result instanceof Array) result = ((Array) result).getType();
       else break;
-    }
-    return result;
-  }
-
-  public Type getTypeAtIndex(int i) {
-    Type result = this;
-    for (int j = 0; j <= i; j++) {
-      result = ((Array) result).getType();
     }
     return result;
   }

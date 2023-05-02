@@ -18,8 +18,7 @@ public class Struct extends AbstractType {
 
   public StructField getField(String name) {
     for (StructField structField : fields)
-      if (structField.getName().equals(name))
-        return structField;
+      if (structField.getName().equals(name)) return structField;
     return null;
   }
 

@@ -22,7 +22,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
 
   @Override
   public ReturnType visit(ArrayAccess arrayAccess, ParamType param) {
-    arrayAccess.getIndexes().forEach(p -> p.accept(this, param));
+    arrayAccess.getIndex().accept(this, param);
     arrayAccess.getArray().accept(this, param);
 
     return null;

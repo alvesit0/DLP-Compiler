@@ -8,6 +8,7 @@ import es.uniovi.dlp.visitor.codegeneration.ExecuteCGVisitor;
 import es.uniovi.dlp.visitor.codegeneration.OffsetVisitor;
 import es.uniovi.dlp.visitor.semantic.IdentificationVisitor;
 import es.uniovi.dlp.visitor.semantic.TypeCheckingVisitor;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import org.antlr.v4.runtime.CharStream;
@@ -25,6 +26,15 @@ public class Compiler {
 
   public Compiler(String filename) {
     this.filename = filename;
+    asignDefaultOutput();
+  }
+
+  private void asignDefaultOutput() {
+    try {
+      this.out = new FileWriter(filename + ".mp");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public Compiler(String file, OutputStreamWriter outputStreamWriter) {
