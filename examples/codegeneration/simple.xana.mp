@@ -18,6 +18,7 @@ main:
 #line 8
 	pusha	0
 	pushb	97
+	b2i
 	storeb
 
 #line 9

@@ -52,7 +52,7 @@ public class Compiler {
 
     assignOffsets();
     if (this.out != null) {
-      generateCode();
+      // generateCode();
       this.out.close();
     }
   }

@@ -7,7 +7,7 @@ public class ArrayAccess extends AbstractExpression {
   private Expression array;
   private List<Expression> indexes;
 
-  private Expression index; // TODO
+  private Expression index;
 
   public ArrayAccess(int line, int column, Expression array, Expression index) {
     super(line, column);
