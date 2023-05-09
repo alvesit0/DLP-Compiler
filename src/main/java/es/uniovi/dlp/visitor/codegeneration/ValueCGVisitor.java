@@ -124,19 +124,19 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-  @Override
-  public Type visit(StructAccess structAccess, Type param) {
-    structAccess.accept(addressVisitor, param);
-    cg.load(structAccess.getStruct().getType());
+  // @Override
+  // public Type visit(StructAccess structAccess, Type param) {
+  //   structAccess.accept(addressVisitor, param);
+  //   cg.load(structAccess.getStruct().getType());
+  //
+  //   return null;
+  // }
 
-    return null;
-  }
-
-  @Override
-  public Type visit(Invocation invocation, Type param) {
-    invocation.getArguments().forEach(a -> a.accept(this, param));
-    cg.call(invocation.getVariable().getName());
-
-    return null;
-  }
+  //  @Override
+  //  public Type visit(Invocation invocation, Type param) {
+  //    invocation.getArguments().forEach(a -> a.accept(this, param));
+  //    cg.call(invocation.getVariable().getName());
+  //
+  //    return null;
+  //  }
 }

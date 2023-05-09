@@ -2,10 +2,8 @@ package es.uniovi.dlp.visitor.codegeneration;
 
 import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.ArrayAccess;
-import es.uniovi.dlp.ast.expressions.StructAccess;
 import es.uniovi.dlp.ast.expressions.Variable;
 import es.uniovi.dlp.ast.types.IntType;
-import es.uniovi.dlp.ast.types.Struct;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
@@ -39,22 +37,6 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
 
   @Override
   public Type visit(ArrayAccess arrayAccess, Type param) {
-    //    arrayAccess.getArray().accept(this, param);
-    //    Array type = (Array) arrayAccess.getArray().getType();
-    //    for (int i = 1; i < arrayAccess.getIndexes().size() + 1; i++) {
-    //      Expression index = arrayAccess.getIndexes().get(i - 1);
-    //      index.accept(valueVisitor, param);
-    //      Type aux = type.getTypeAtIndex(i - 1);
-    //
-    //      if (aux instanceof Array)
-    //        cg.pushValue(
-    //            index.getType(), type.getArrayType().getNumberOfBytes() * ((Array) aux).getSize()
-    // + "");
-    //      else cg.pushValue(index.getType(), type.getArrayType().getNumberOfBytes() + "");
-    //
-    //      cg.mul(index.getType());
-    //      cg.add(index.getType());
-    //    } TODO (?)
 
     var expression = arrayAccess.getArray();
     expression.accept(this, null);
@@ -66,19 +48,19 @@ public class AddressCGVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-  @Override
-  public Type visit(StructAccess structAccess, Type param) {
-
-    var expression = structAccess.getStruct();
-    expression.accept(this, null);
-
-    if (expression.getType() instanceof Struct recordType) {
-      int offset = recordType.getField(structAccess.getName()).getOffset();
-      Type type = recordType.getField(structAccess.getName()).getType();
-      cg.pushValue(type, offset + "");
-      cg.add(type);
-    }
-
-    return null;
-  }
+  // @Override
+  // public Type visit(StructAccess structAccess, Type param) {
+  //
+  //  var expression = structAccess.getStruct();
+  //  expression.accept(this, null);
+  //
+  //  if (expression.getType() instanceof Struct recordType) {
+  //    int offset = recordType.getField(structAccess.getName()).getOffset();
+  //    Type type = recordType.getField(structAccess.getName()).getType();
+  //    cg.pushValue(type, offset + "");
+  //    cg.add(type);
+  //  }
+  //
+  //  return null;
+  // }
 }

@@ -1,11 +1,9 @@
 package es.uniovi.dlp.ast.expressions;
 
 import es.uniovi.dlp.visitor.AbstractVisitor;
-import java.util.List;
 
 public class ArrayAccess extends AbstractExpression {
   private Expression array;
-  private List<Expression> indexes;
 
   private Expression index;
 

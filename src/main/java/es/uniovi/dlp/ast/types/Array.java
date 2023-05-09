@@ -21,18 +21,9 @@ public class Array extends AbstractType {
     return type;
   }
 
-  public Type getArrayType() {
-    Type result = this.type;
-    while (true) {
-      if (result instanceof Array) result = ((Array) result).getType();
-      else break;
-    }
-    return result;
-  }
-
   @Override
   public String getSuffix() {
-    return getArrayType().getSuffix();
+    return getType().getSuffix();
   }
 
   @Override
@@ -53,7 +44,7 @@ public class Array extends AbstractType {
   @Override
   public Type indexing(Type type) {
     if (type instanceof ErrorType) return type;
-    if (type instanceof IntType) return getArrayType();
+    if (type instanceof IntType) return getType();
     return super.indexing(type);
   }
 

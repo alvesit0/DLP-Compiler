@@ -3,11 +3,9 @@ package es.uniovi.dlp.visitor.codegeneration;
 import es.uniovi.dlp.ast.Program;
 import es.uniovi.dlp.ast.definitions.FunctionDefinition;
 import es.uniovi.dlp.ast.definitions.VarDefinition;
-import es.uniovi.dlp.ast.expressions.Invocation;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.FuncType;
 import es.uniovi.dlp.ast.types.Type;
-import es.uniovi.dlp.ast.types.VoidType;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.io.OutputStreamWriter;
 
@@ -174,26 +172,26 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-  @Override
-  public Type visit(Invocation invocation, Type param) {
-    cg.newLine(invocation.getLine());
+  //  @Override
+  //  public Type visit(Invocation invocation, Type param) {
+  //    cg.newLine(invocation.getLine());
+  //
+  //    invocation.getArguments().forEach(arg -> arg.accept(valueVisitor, param));
+  //    cg.call(invocation.getVariable().getName());
+  //
+  //    FuncType type = (FuncType) invocation.getVariable().getDefinition().getType();
+  //    if (!(type.getReturnType() instanceof VoidType)) cg.pop(type.getReturnType());
+  //
+  //    return null;
+  //  }
 
-    invocation.getArguments().forEach(arg -> arg.accept(valueVisitor, param));
-    cg.call(invocation.getVariable().getName());
-
-    FuncType type = (FuncType) invocation.getVariable().getDefinition().getType();
-    if (!(type.getReturnType() instanceof VoidType)) cg.pop(type.getReturnType());
-
-    return null;
-  }
-
-  @Override
-  public Type visit(Return returnStatement, Type param) {
-    cg.newLine(returnStatement.getReturnValue().getLine());
-    cg.comment("Return");
-
-    returnStatement.getReturnValue().accept(valueVisitor, param);
-
-    return null;
-  }
+  //  @Override
+  //  public Type visit(Return returnStatement, Type param) {
+  //    cg.newLine(returnStatement.getReturnValue().getLine());
+  //    cg.comment("Return");
+  //
+  //    returnStatement.getReturnValue().accept(valueVisitor, param);
+  //
+  //    return null;
+  //  }
 }
