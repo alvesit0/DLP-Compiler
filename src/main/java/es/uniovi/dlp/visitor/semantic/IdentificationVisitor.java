@@ -5,7 +5,6 @@ import es.uniovi.dlp.ast.definitions.FunctionDefinition;
 import es.uniovi.dlp.ast.definitions.VarDefinition;
 import es.uniovi.dlp.ast.expressions.Invocation;
 import es.uniovi.dlp.ast.expressions.Variable;
-import es.uniovi.dlp.ast.types.ErrorType;
 import es.uniovi.dlp.ast.types.Struct;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.error.ErrorManager;
@@ -24,12 +23,8 @@ public class IdentificationVisitor extends AbstractVisitor<Type, Type> {
     Definition definition = symbolTable.find(variable.getName());
     if (definition == null) {
       ErrorManager.getInstance()
-              .addError(variable.getLine(), variable.getColumn(), ErrorReason.VARIABLE_NOT_DECLARED);
-      // Añadido para que la generación de código no casque si hay errores por no
-      // existir la definición de variable.
-      variable.setDefinition(new VarDefinition(variable.getLine(), variable.getColumn(), "error", ErrorType.getInstance()));
-    }
-    else {
+          .addError(variable.getLine(), variable.getColumn(), ErrorReason.VARIABLE_NOT_DECLARED);
+    } else {
       variable.setDefinition(definition);
     }
 

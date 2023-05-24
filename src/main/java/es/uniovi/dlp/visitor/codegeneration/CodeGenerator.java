@@ -13,6 +13,8 @@ public class CodeGenerator {
   private int currentLine = 0;
   private int lastLabelId = -1;
 
+  // TODO: Detalles de las variables (array y struct)
+
   public CodeGenerator(String filename, boolean showDebug, OutputStreamWriter out) {
     this.showDebug = showDebug;
     this.filename = filename;

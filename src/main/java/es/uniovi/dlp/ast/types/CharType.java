@@ -52,7 +52,7 @@ public class CharType extends AbstractType {
   @Override
   public String convert(Type type) {
     if (type instanceof IntType) return "b2i";
-    if (type instanceof CharType) return "b2i";
+    if (type instanceof CharType) return "";
     if (type instanceof DoubleType) return "b2i\n\ti2f";
     return " ERROR: NOT SUPPORTED ";
   }

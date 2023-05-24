@@ -4,7 +4,7 @@ import es.uniovi.dlp.ast.expressions.*;
 import es.uniovi.dlp.ast.types.Type;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
-public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
+public class ValueCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
   private AddressCGVisitor addressVisitor;
   private CodeGenerator cg;
 
@@ -14,20 +14,20 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(Variable v, Type param) {
+  public Type visit(Variable v, ReturnBytesParam param) {
     v.accept(addressVisitor, param);
     cg.load(v.getType());
     return null;
   }
 
-  public Type visit(ArithmeticOperation arithmeticOperation, Type param) {
+  public Type visit(ArithmeticOperation arithmeticOperation, ReturnBytesParam param) {
     Type leftType = arithmeticOperation.getLeftExpression().getType();
     Type rightType = arithmeticOperation.getRightExpression().getType();
 
     arithmeticOperation.getLeftExpression().accept(this, param);
-    cg.writeInstruction(leftType.convert(rightType));
+    cg.writeInstruction(leftType.toInt());
     arithmeticOperation.getRightExpression().accept(this, param);
-    cg.writeInstruction(rightType.convert(leftType));
+    cg.writeInstruction(rightType.toInt());
 
     switch (arithmeticOperation.getOp()) {
       case "+" -> cg.add(arithmeticOperation.getType());
@@ -41,7 +41,7 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(Cast cast, Type param) {
+  public Type visit(Cast cast, ReturnBytesParam param) {
     cast.getLeftExpression().accept(this, param);
     cg.cast(cast.getLeftExpression().getType(), cast.getType());
 
@@ -49,28 +49,28 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(IntLiteral intLiteral, Type param) {
+  public Type visit(IntLiteral intLiteral, ReturnBytesParam param) {
     cg.pushValue(intLiteral.getType(), intLiteral.getValue() + "");
 
     return null;
   }
 
   @Override
-  public Type visit(DoubleLiteral doubleLiteral, Type param) {
+  public Type visit(DoubleLiteral doubleLiteral, ReturnBytesParam param) {
     cg.pushValue(doubleLiteral.getType(), doubleLiteral.getValue() + "");
 
     return null;
   }
 
   @Override
-  public Type visit(CharLiteral charLiteral, Type param) {
+  public Type visit(CharLiteral charLiteral, ReturnBytesParam param) {
     cg.pushValue(charLiteral.getType(), ((int) charLiteral.getValue()) + "");
 
     return null;
   }
 
   @Override
-  public Type visit(BooleanOperation booleanOperation, Type param) {
+  public Type visit(BooleanOperation booleanOperation, ReturnBytesParam param) {
     booleanOperation.getLeftExpression().accept(this, param);
     booleanOperation.getRightExpression().accept(this, param);
 
@@ -83,7 +83,7 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(BooleanNot booleanNot, Type param) {
+  public Type visit(BooleanNot booleanNot, ReturnBytesParam param) {
     booleanNot.getExpression().accept(this, param);
     if (!booleanNot.getExpression().getType().toInt().isEmpty())
       cg.writeInstruction(booleanNot.getExpression().getType().toInt());
@@ -93,7 +93,7 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(ComparisonOperation comparisonOperation, Type param) {
+  public Type visit(ComparisonOperation comparisonOperation, ReturnBytesParam param) {
     Type leftType = comparisonOperation.getLeftExpression().getType();
     Type rightType = comparisonOperation.getRightExpression().getType();
 
@@ -117,26 +117,26 @@ public class ValueCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(ArrayAccess arrayAccess, Type param) {
+  public Type visit(ArrayAccess arrayAccess, ReturnBytesParam param) {
     arrayAccess.accept(addressVisitor, param);
     cg.load(arrayAccess.getType());
 
     return null;
   }
 
-  // @Override
-  // public Type visit(StructAccess structAccess, Type param) {
-  //   structAccess.accept(addressVisitor, param);
-  //   cg.load(structAccess.getStruct().getType());
-  //
-  //   return null;
-  // }
+  @Override
+  public Type visit(StructAccess structAccess, ReturnBytesParam param) {
+    structAccess.accept(addressVisitor, param);
+    cg.load(structAccess.getType());
 
-  //  @Override
-  //  public Type visit(Invocation invocation, Type param) {
-  //    invocation.getArguments().forEach(a -> a.accept(this, param));
-  //    cg.call(invocation.getVariable().getName());
-  //
-  //    return null;
-  //  }
+    return null;
+  }
+
+  @Override
+  public Type visit(Invocation invocation, ReturnBytesParam param) {
+    invocation.getArguments().forEach(a -> a.accept(this, param));
+    cg.call(invocation.getVariable().getName());
+
+    return null;
+  }
 }

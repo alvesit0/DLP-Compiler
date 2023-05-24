@@ -3,13 +3,15 @@ package es.uniovi.dlp.visitor.codegeneration;
 import es.uniovi.dlp.ast.Program;
 import es.uniovi.dlp.ast.definitions.FunctionDefinition;
 import es.uniovi.dlp.ast.definitions.VarDefinition;
+import es.uniovi.dlp.ast.expressions.Invocation;
 import es.uniovi.dlp.ast.statements.*;
 import es.uniovi.dlp.ast.types.FuncType;
 import es.uniovi.dlp.ast.types.Type;
+import es.uniovi.dlp.ast.types.VoidType;
 import es.uniovi.dlp.visitor.AbstractVisitor;
 import java.io.OutputStreamWriter;
 
-public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
+public class ExecuteCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
   private AddressCGVisitor addressVisitor;
   private ValueCGVisitor valueVisitor;
 
@@ -22,7 +24,8 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     addressVisitor.setValueVisitor(valueVisitor);
   }
 
-  public Type visit(Program program, Type param) {
+  @Override
+  public Type visit(Program program, ReturnBytesParam param) {
 
     program
         .getDefinitions()
@@ -44,7 +47,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(Assignment assignment, Type param) {
+  public Type visit(Assignment assignment, ReturnBytesParam param) {
     cg.newLine(assignment.getLeftExpression().getLine());
     assignment.getLeftExpression().accept(addressVisitor, param);
     assignment.getRightExpression().accept(valueVisitor, param);
@@ -58,7 +61,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(Read read, Type param) {
+  public Type visit(Read read, ReturnBytesParam param) {
     cg.newLine(read.getExpression().getLine());
     cg.comment("Read");
     read.getExpression().accept(addressVisitor, param);
@@ -69,7 +72,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(Write write, Type param) {
+  public Type visit(Write write, ReturnBytesParam param) {
     cg.newLine(write.getExpression().getLine());
     cg.comment("Write");
     write.getExpression().accept(valueVisitor, param);
@@ -79,7 +82,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(VarDefinition varDefinition, Type param) {
+  public Type visit(VarDefinition varDefinition, ReturnBytesParam param) {
     cg.comment(
         varDefinition.getName()
             + " :: "
@@ -91,9 +94,10 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(FunctionDefinition functionDefinition, Type param) {
+  public Type visit(FunctionDefinition functionDefinition, ReturnBytesParam param) {
     cg.newLine(functionDefinition.getLine());
 
+    // TODO: MODIFICAR PARA QUE SE HAGA UN EXECUTE A FUNCTYPE
     FuncType type = (FuncType) functionDefinition.getType();
 
     cg.label(functionDefinition.getName());
@@ -120,15 +124,16 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
       argumentsBytes += varDefinition.getType().getNumberOfBytes();
     int returnBytes = type.getReturnType().getNumberOfBytes();
 
-    functionDefinition.getStatements().forEach(s -> s.accept(this, param));
+    ReturnBytesParam returnType = new ReturnBytesParam(returnBytes, localBytes, argumentsBytes);
+    functionDefinition.getStatements().forEach(s -> s.accept(this, returnType));
 
-    cg.ret(returnBytes, localBytes, argumentsBytes);
+    if (type.getReturnType() instanceof VoidType) cg.ret(returnBytes, localBytes, argumentsBytes);
 
     return null;
   }
 
   @Override
-  public Type visit(If ifStatement, Type param) {
+  public Type visit(If ifStatement, ReturnBytesParam param) {
     cg.newLine(ifStatement.getCondition().getLine());
     cg.comment("If statement");
 
@@ -152,7 +157,7 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(While whileStatement, Type param) {
+  public Type visit(While whileStatement, ReturnBytesParam param) {
     cg.newLine(whileStatement.getCondition().getLine());
     cg.comment("While statement");
 
@@ -172,26 +177,27 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, Type> {
     return null;
   }
 
-  //  @Override
-  //  public Type visit(Invocation invocation, Type param) {
-  //    cg.newLine(invocation.getLine());
-  //
-  //    invocation.getArguments().forEach(arg -> arg.accept(valueVisitor, param));
-  //    cg.call(invocation.getVariable().getName());
-  //
-  //    FuncType type = (FuncType) invocation.getVariable().getDefinition().getType();
-  //    if (!(type.getReturnType() instanceof VoidType)) cg.pop(type.getReturnType());
-  //
-  //    return null;
-  //  }
+  @Override
+  public Type visit(Invocation invocation, ReturnBytesParam param) {
+    cg.newLine(invocation.getLine());
 
-  //  @Override
-  //  public Type visit(Return returnStatement, Type param) {
-  //    cg.newLine(returnStatement.getReturnValue().getLine());
-  //    cg.comment("Return");
-  //
-  //    returnStatement.getReturnValue().accept(valueVisitor, param);
-  //
-  //    return null;
-  //  }
+    invocation.getArguments().forEach(arg -> arg.accept(valueVisitor, param));
+    cg.call(invocation.getVariable().getName());
+
+    FuncType type = (FuncType) invocation.getVariable().getDefinition().getType();
+    if (!(type.getReturnType() instanceof VoidType)) cg.pop(type.getReturnType());
+
+    return null;
+  }
+
+  @Override
+  public Type visit(Return returnStatement, ReturnBytesParam param) {
+    cg.newLine(returnStatement.getReturnValue().getLine());
+    cg.comment("Return");
+
+    returnStatement.getReturnValue().accept(valueVisitor, param);
+    cg.ret(param.bytesReturn, param.bytesLocals, param.bytesParams);
+
+    return null;
+  }
 }

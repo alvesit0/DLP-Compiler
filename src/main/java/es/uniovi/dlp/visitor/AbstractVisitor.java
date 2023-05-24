@@ -217,6 +217,7 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
 
   @Override
   public ReturnType visit(StructField structField, ParamType param) {
+    structField.getType().accept(this, param);
     return null;
   }
 

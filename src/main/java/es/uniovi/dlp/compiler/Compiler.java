@@ -47,14 +47,13 @@ public class Compiler {
     program = parse(filename);
     assignScope();
     assignType();
-
     checkErrors();
 
-    assignOffsets();
-    if (this.out != null) {
+    if (!ErrorManager.getInstance().hasErrors()) {
+      assignOffsets();
       generateCode();
-      this.out.close();
     }
+    this.out.close();
   }
 
   private void checkErrors() {
