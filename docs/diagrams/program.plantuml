@@ -14,15 +14,13 @@ ASTNode <|.. Program
 
 interface Definition {
     type: Type
-}
-
-class VarDefinition {
+    offset: int
+    scope: int
     name: String
 }
 
 class FunctionDefinition {
-    name: String
-    varDefinitions: VarDefinition
+    varDefinitions: List<VarDefinition>
     statements: List<Statement>
 }
 

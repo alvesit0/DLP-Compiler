@@ -130,7 +130,7 @@ expression returns [Expression ast]
             | expr=expression'.'attribute=ID {$ast = new StructAccess($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $attribute.text);}
             | array=expression'['index=expression']'
                 {
-                    $ast = new ArrayAccess($array.ast.getLine(), $array.ast.getColumn(), $array.ast, $index.ast);
+                    $ast = new Indexing($array.ast.getLine(), $array.ast.getColumn(), $array.ast, $index.ast);
                 }
             | expr=expression 'as' type {$ast = new Cast($expr.ast.getLine(), $expr.ast.getColumn(), $expr.ast, $type.ast);}
             | function_invocation {$ast = $function_invocation.ast;}

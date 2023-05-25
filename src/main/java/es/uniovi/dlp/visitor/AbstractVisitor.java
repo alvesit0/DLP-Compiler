@@ -21,9 +21,9 @@ public abstract class AbstractVisitor<ReturnType, ParamType>
   }
 
   @Override
-  public ReturnType visit(ArrayAccess arrayAccess, ParamType param) {
-    arrayAccess.getIndex().accept(this, param);
-    arrayAccess.getArray().accept(this, param);
+  public ReturnType visit(Indexing indexing, ParamType param) {
+    indexing.getIndex().accept(this, param);
+    indexing.getArray().accept(this, param);
 
     return null;
   }

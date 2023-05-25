@@ -245,24 +245,22 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Type> {
   }
 
   @Override
-  public Type visit(ArrayAccess arrayAccess, Type param) {
-    super.visit(arrayAccess, param);
-    arrayAccess.setLValue(true);
+  public Type visit(Indexing indexing, Type param) {
+    super.visit(indexing, param);
+    indexing.setLValue(true);
 
-    if (!arrayAccess.getArray().getType().isIndexable()) {
-      arrayAccess.setType(ErrorType.getInstance());
+    if (!indexing.getArray().getType().isIndexable()) {
+      indexing.setType(ErrorType.getInstance());
       ErrorManager.getInstance()
-          .addError(arrayAccess.getLine(), arrayAccess.getColumn(), ErrorReason.INVALID_INDEXING);
-    } else
-      arrayAccess.setType(
-          arrayAccess.getArray().getType().indexing(arrayAccess.getIndex().getType()));
+          .addError(indexing.getLine(), indexing.getColumn(), ErrorReason.INVALID_INDEXING);
+    } else indexing.setType(indexing.getArray().getType().indexing(indexing.getIndex().getType()));
 
-    if (arrayAccess.getType() == null) {
-      arrayAccess.setType(ErrorType.getInstance());
+    if (indexing.getType() == null) {
+      indexing.setType(ErrorType.getInstance());
       ErrorManager.getInstance()
           .addError(
-              arrayAccess.getIndex().getLine(),
-              arrayAccess.getIndex().getColumn(),
+              indexing.getIndex().getLine(),
+              indexing.getIndex().getColumn(),
               ErrorReason.INVALID_INDEX_EXPRESSION);
     }
 

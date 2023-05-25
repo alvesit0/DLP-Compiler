@@ -1,7 +1,6 @@
 package es.uniovi.dlp.visitor.codegeneration;
 
-import es.uniovi.dlp.ast.definitions.VarDefinition;
-import es.uniovi.dlp.ast.expressions.ArrayAccess;
+import es.uniovi.dlp.ast.expressions.Indexing;
 import es.uniovi.dlp.ast.expressions.StructAccess;
 import es.uniovi.dlp.ast.expressions.Variable;
 import es.uniovi.dlp.ast.types.IntType;
@@ -23,16 +22,14 @@ public class AddressCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
   }
 
   @Override
-  public Type visit(Variable v, ReturnBytesParam param) {
-    // TODO: Definir offset en todas las definitions
-    VarDefinition varDefinition = (VarDefinition) v.getDefinition();
-    Type intType = new IntType(varDefinition.getLine(), varDefinition.getColumn());
+  public Type visit(Variable variable, ReturnBytesParam param) {
+    Type intType = new IntType(variable.getLine(), variable.getColumn());
     // Si es variable global
-    if (varDefinition.getScope() == 0) cg.pusha(varDefinition.getOffset());
+    if (variable.getDefinition().getScope() == 0) cg.pusha(variable.getDefinition().getOffset());
     // Si es local
     else {
       cg.pushBP();
-      cg.pushValue(intType, varDefinition.getOffset() + "");
+      cg.pushValue(intType, variable.getDefinition().getOffset() + "");
       // Al ser local, AÑADIMOS el offset al BP para obtener la dirección de la variable.
       // De esta forma, lo que quedará en el tope de la pila será la dirección de dicha
       // variable.
@@ -42,15 +39,15 @@ public class AddressCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
   }
 
   @Override
-  public Type visit(ArrayAccess arrayAccess, ReturnBytesParam param) {
+  public Type visit(Indexing indexing, ReturnBytesParam param) {
 
-    var expression = arrayAccess.getArray();
+    var expression = indexing.getArray();
     expression.accept(this, null);
-    arrayAccess.getIndex().accept(valueVisitor, null);
-    // TODO: Cambiar por IntType.getInstance()
-    cg.pushValue(new IntType(0, 0), arrayAccess.getType().getNumberOfBytes() + "");
-    cg.mul(new IntType(0, 0));
-    cg.add(new IntType(0, 0));
+    indexing.getIndex().accept(valueVisitor, null);
+    Type intType = new IntType(indexing.getLine(), indexing.getColumn());
+    cg.pushValue(intType, indexing.getType().getNumberOfBytes() + "");
+    cg.mul(intType);
+    cg.add(intType);
 
     return null;
   }
@@ -63,10 +60,9 @@ public class AddressCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
 
     if (expression.getType() instanceof Struct recordType) {
       int offset = recordType.getField(structAccess.getName()).getOffset();
-      Type type = recordType.getField(structAccess.getName()).getType();
-      // TODO: Cambiar por IntType.getInstance()
-      cg.pushValue(new IntType(0, 0), offset + "");
-      cg.add(new IntType(0, 0));
+      Type intType = new IntType(structAccess.getLine(), structAccess.getColumn());
+      cg.pushValue(intType, offset + "");
+      cg.add(intType);
     }
 
     return null;

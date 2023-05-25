@@ -51,7 +51,6 @@ public class Struct extends AbstractType {
   @Override
   public Type dot(String field) {
     for (StructField s : fields) if (s.getName().equals(field)) return s.getType();
-
     return null;
   }
 
@@ -71,6 +70,12 @@ public class Struct extends AbstractType {
 
   @Override
   public String toString() {
-    return "struct";
+    StringBuilder recordData = new StringBuilder();
+    if (fields.size() > 0) {
+      recordData.append(fields.get(0).toString());
+      for (int i = 1; i < fields.size(); i++)
+        recordData.append(" :: ").append(fields.get(i).toString());
+    }
+    return "record (" + recordData + ")";
   }
 }

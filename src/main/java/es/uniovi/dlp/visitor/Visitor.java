@@ -12,7 +12,7 @@ public interface Visitor<ReturnType, ParamType> {
   // ########### EXPRESSIONS ###########
   ReturnType visit(ArithmeticOperation arithmeticOperation, ParamType param);
 
-  ReturnType visit(ArrayAccess arrayAccess, ParamType param);
+  ReturnType visit(Indexing indexing, ParamType param);
 
   ReturnType visit(BooleanNot booleanNot, ParamType param);
 

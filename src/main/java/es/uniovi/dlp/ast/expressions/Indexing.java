@@ -2,12 +2,12 @@ package es.uniovi.dlp.ast.expressions;
 
 import es.uniovi.dlp.visitor.AbstractVisitor;
 
-public class ArrayAccess extends AbstractExpression {
+public class Indexing extends AbstractExpression {
   private Expression array;
 
   private Expression index;
 
-  public ArrayAccess(int line, int column, Expression array, Expression index) {
+  public Indexing(int line, int column, Expression array, Expression index) {
     super(line, column);
     this.array = array;
     this.index = index;

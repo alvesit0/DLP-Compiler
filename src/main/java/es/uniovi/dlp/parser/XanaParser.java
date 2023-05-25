@@ -1786,7 +1786,7 @@ public class XanaParser extends Parser {
                     match(T__17);
 
                     ((ExpressionContext) _localctx).ast =
-                        new ArrayAccess(
+                        new Indexing(
                             ((ExpressionContext) _localctx).array.ast.getLine(),
                             ((ExpressionContext) _localctx).array.ast.getColumn(),
                             ((ExpressionContext) _localctx).array.ast,

@@ -117,9 +117,9 @@ public class ValueCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
   }
 
   @Override
-  public Type visit(ArrayAccess arrayAccess, ReturnBytesParam param) {
-    arrayAccess.accept(addressVisitor, param);
-    cg.load(arrayAccess.getType());
+  public Type visit(Indexing indexing, ReturnBytesParam param) {
+    indexing.accept(addressVisitor, param);
+    cg.load(indexing.getType());
 
     return null;
   }

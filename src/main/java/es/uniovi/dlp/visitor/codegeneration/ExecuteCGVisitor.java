@@ -86,8 +86,8 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
     cg.comment(
         varDefinition.getName()
             + " :: "
-            + varDefinition.getType()
-            + "(offset "
+            + varDefinition.getType().toString()
+            + " (offset "
             + varDefinition.getOffset()
             + ")");
     return null;
@@ -97,7 +97,6 @@ public class ExecuteCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
   public Type visit(FunctionDefinition functionDefinition, ReturnBytesParam param) {
     cg.newLine(functionDefinition.getLine());
 
-    // TODO: MODIFICAR PARA QUE SE HAGA UN EXECUTE A FUNCTYPE
     FuncType type = (FuncType) functionDefinition.getType();
 
     cg.label(functionDefinition.getName());

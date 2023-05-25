@@ -73,6 +73,4 @@ public class OffsetVisitor extends AbstractVisitor<Type, Type> {
 
     return null;
   }
-
-  // Los arrays ya lo hacen solos
 }
