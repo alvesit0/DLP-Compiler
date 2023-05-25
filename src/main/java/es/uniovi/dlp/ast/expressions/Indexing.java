@@ -4,7 +4,6 @@ import es.uniovi.dlp.visitor.AbstractVisitor;
 
 public class Indexing extends AbstractExpression {
   private Expression array;
-
   private Expression index;
 
   public Indexing(int line, int column, Expression array, Expression index) {

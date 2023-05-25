@@ -14,10 +14,6 @@ public class Return implements Statement {
     return returnValue;
   }
 
-  public void setReturnValue(Expression returnValue) {
-    this.returnValue = returnValue;
-  }
-
   @Override
   public int getLine() {
     return 0;

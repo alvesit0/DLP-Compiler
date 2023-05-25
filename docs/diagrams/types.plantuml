@@ -7,10 +7,29 @@ interface ASTNode #b1e8f0 {
     getColumn(): int
 }
 
-interface Type
+interface Type {
+    getNumberOfBytes() : int
+    getSuffix() : String
+    convert(Type) : String
+    toInt() : String
+    arithmetic(Type) : Type
+    negative() : Type
+    booleanNot() : Type
+    indexing(Type) : Type
+    dot(String) : Type
+    cast(Type) : Type
+    assign(Type) : Type
+    subtype(Type) : Type
+    comparison(Type) : Type
+    logical(Type) : Type
+    asParam(Type) : Type
+    isBoolean() : Type
+    isIndexable() : booleanNot
+    isStruct() : booleanNot
+}
 
 class FuncType {
-    params : VarDefinition
+    params : List<VarDefinition>
     returnType : Type
 }
 
@@ -22,30 +41,33 @@ class CharType
 ' Tipo error
 class ErrorType
 
-Type <|.. IntType
-Type <|.. DoubleType
-Type <|.. CharType
-Type <|.. ArrayType
-Type <|.. StructType
-Type <|.. FuncType
-Type <|.. ErrorType
-
 ' Tipos complejos
-class ArrayType {
+class Array {
     size : int
     type : Type
 }
 
-class StructType {
+class Struct {
     fields : List<StructField>
 }
 
 class StructField {
+    line : int
+    column : int
     name : String
     type : Type
+    offset : int
 }
 
+Type <|.. IntType
+Type <|.. DoubleType
+Type <|.. CharType
+Type <|.. Array
+Type <|.. Struct
+Type <|.. FuncType
+Type <|.. ErrorType
+
 ASTNode <|-- Type
-StructField --o StructType
+StructField --o Struct
 
 @enduml

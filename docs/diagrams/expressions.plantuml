@@ -10,6 +10,7 @@ interface ASTNode #b1e8f0 {
 interface Expression {
     type: Type
     definition: Definition
+    lValue: boolean
 }
 
 class IntLiteral {
@@ -51,12 +52,25 @@ class BooleanOperation {
 
 class Cast {
     leftExpression: Expression
-    rightExpression: Type
 }
 
 class Invocation {
     expression : Expression
     arguments : List<Expression>
+}
+
+class BooleanNot {
+    expression : Expression
+}
+
+class Indexing {
+    array : Expression
+    index : Expression
+}
+
+class StructAccess {
+    struct : Expression
+    index : String
 }
 
 ASTNode <|-- Expression
@@ -69,11 +83,17 @@ Expression <|.. ComparisonOperation
 Expression <|.. BooleanOperation
 Expression <|.. Cast
 Expression <|.. Invocation
+Expression <|.. BooleanNot
+Expression <|.. Indexing
+Expression <|.. StructAccess
 
 ArithmeticOperation o--"2" Expression
 BooleanOperation o--"2" Expression
 ComparisonOperation o--"2" Expression
 Cast o--"1" Expression
 Invocation o--"1" Expression
+BooleanNot o--"1" Expression
+Indexing o--"2" Expression
+StructAccess o--"1" Expression
 
 @enduml
