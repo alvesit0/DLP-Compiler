@@ -25,9 +25,9 @@ public class ValueCGVisitor extends AbstractVisitor<Type, ReturnBytesParam> {
     Type rightType = arithmeticOperation.getRightExpression().getType();
 
     arithmeticOperation.getLeftExpression().accept(this, param);
-    cg.writeInstruction(leftType.toInt());
+    cg.writeInstruction(arithmeticOperation.getLeftExpression().getType().convert(arithmeticOperation.getType()));
     arithmeticOperation.getRightExpression().accept(this, param);
-    cg.writeInstruction(rightType.toInt());
+    cg.writeInstruction(arithmeticOperation.getRightExpression().getType().convert(arithmeticOperation.getType()));
 
     switch (arithmeticOperation.getOp()) {
       case "+" -> cg.add(arithmeticOperation.getType());

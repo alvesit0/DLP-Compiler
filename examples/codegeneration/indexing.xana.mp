@@ -8,9 +8,9 @@ halt
 main:
 	' Parameters
 	' Local variables
-	' vector :: array(offset -20)
-	' matrix :: array(offset -80)
-	' i :: int(offset -82)
+	' vector :: [10 :: int] (offset -20)
+	' matrix :: [5 :: [3 :: double]] (offset -80)
+	' i :: int (offset -82)
 	enter	82
 
 #line 5
